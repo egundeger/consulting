@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Speaking & Workshops — Dr. Ersin Gündeğer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#111214;--surface:#1a1c20;--border:#27292f;
+      --amber:#c9953a;--amber-dim:#8a6325;
+      --steel:#5b8fa8;--steel-dim:#2e4f62;
+      --text:#d8d4ce;--muted:#6e7480;--white:#f0ece5;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville',Georgia,serif;font-size:16px;line-height:1.7;overflow-x:hidden}
+    #canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.12}
+    .wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 2rem}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(17,18,20,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center}
+    .nav-logo{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--amber);letter-spacing:.15em;text-transform:uppercase;text-decoration:none}
+    .nav-right{display:flex;align-items:center;gap:2rem}
+    nav ul{list-style:none;display:flex;gap:2rem}
+    nav a{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .3s}
+    nav a:hover,nav a.active{color:var(--amber)}
+    .lang-toggle{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.15em;display:flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+    .lang-btn{background:none;border:none;cursor:pointer;padding:.35rem .65rem;color:var(--muted);transition:all .25s}
+    .lang-btn.active{background:var(--amber);color:#0a0d12;font-weight:500}
+    .lang-btn:not(.active):hover{color:var(--amber)}
+
+    /* HERO */
+    #hero{min-height:70vh;display:flex;flex-direction:column;justify-content:center;padding-top:5rem}
+    .hero-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--amber);letter-spacing:.25em;text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s .2s forwards}
+    h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,7vw,4.5rem);font-weight:300;color:var(--white);line-height:1.05;opacity:0;animation:fadeUp .9s .4s forwards}
+    h1 em{font-style:italic;color:var(--amber)}
+    .hero-desc{margin-top:1.75rem;max-width:580px;font-size:1.05rem;color:var(--muted);font-style:italic;opacity:0;animation:fadeUp .9s .6s forwards}
+    .hero-badges{margin-top:2rem;display:flex;gap:.75rem;flex-wrap:wrap;opacity:0;animation:fadeUp .9s .8s forwards}
+    .badge{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem .9rem;border:1px solid var(--border);color:var(--muted);border-radius:2px}
+
+    /* DIVIDER */
+    .divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:4rem 0}
+
+    /* SECTION */
+    .sec-label{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--amber);letter-spacing:.3em;text-transform:uppercase;margin-bottom:.75rem}
+    h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:300;color:var(--white);line-height:1.1}
+    h2 em{font-style:italic;color:var(--amber)}
+    .sec-desc{margin-top:1rem;max-width:540px;color:var(--muted);font-style:italic}
+
+    /* TOPIC CARDS */
+    .topic-grid{margin-top:2.5rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem}
+    .topic-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.5rem;position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
+    .topic-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),var(--steel));opacity:0;transition:opacity .3s}
+    .topic-card:hover{border-color:var(--amber-dim);transform:translateY(-3px)}
+    .topic-card:hover::before{opacity:1}
+    .topic-icon{font-size:1.3rem;margin-bottom:.85rem}
+    .topic-card h3{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400;color:var(--white);margin-bottom:.45rem}
+    .topic-card p{font-size:.85rem;color:var(--muted);line-height:1.6}
+    .tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.85rem}
+    .tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.08em;padding:.25rem .6rem;border-radius:2px;background:rgba(91,143,168,.1);border:1px solid var(--steel-dim);color:var(--steel)}
+
+    /* FORMATS */
+    .format-grid{margin-top:2.5rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+    .format-card{border:1px solid var(--border);padding:1.25rem 1.5rem;border-radius:4px;transition:border-color .3s}
+    .format-card:hover{border-color:var(--steel-dim)}
+    .format-type{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;color:var(--white);margin-bottom:.35rem}
+    .format-dur{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--amber);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem}
+    .format-card p{font-size:.82rem;color:var(--muted);line-height:1.55}
+
+    /* BOOKING FORM */
+    #booking{padding:4rem 0 6rem}
+    .form-grid{margin-top:2.5rem;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+    .form-full{grid-column:1/-1}
+    .form-group{display:flex;flex-direction:column;gap:.45rem}
+    label{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+    input,select,textarea{background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Libre Baskerville',serif;font-size:.9rem;padding:.75rem 1rem;border-radius:2px;outline:none;transition:border-color .3s;width:100%}
+    input:focus,select:focus,textarea:focus{border-color:var(--amber-dim)}
+    input::placeholder,textarea::placeholder{color:var(--muted);font-style:italic}
+    select option{background:var(--surface);color:var(--text)}
+    textarea{resize:vertical;min-height:130px;line-height:1.65}
+    .form-note{grid-column:1/-1;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em;line-height:1.6}
+    .form-submit{grid-column:1/-1;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+    .btn-submit{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;padding:.85rem 2rem;background:var(--amber);color:#0a0d12;font-weight:500;border:none;border-radius:2px;cursor:pointer;transition:all .3s}
+    .btn-submit:hover{background:#e0aa4a;transform:translateY(-2px)}
+    .submit-note{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em}
+
+    /* SUCCESS STATE */
+    .form-success{display:none;text-align:center;padding:3rem;border:1px solid var(--amber-dim);border-radius:4px;background:rgba(201,149,58,.05)}
+    .form-success h3{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--white);margin-bottom:.75rem}
+    .form-success p{color:var(--muted);font-style:italic}
+
+    /* FOOTER */
+    footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2rem;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--muted);letter-spacing:.1em}
+    footer span{color:var(--amber-dim)}
+    footer a{color:var(--muted);text-decoration:none;transition:color .3s}
+    footer a:hover{color:var(--amber)}
+
+    /* ANIMATIONS */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    @media(max-width:680px){
+      nav ul{display:none}
+      .nav-right{gap:1rem}
+      .form-grid{grid-template-columns:1fr}
+      .form-full{grid-column:1}
+      .form-submit{grid-column:1}
+      .form-note{grid-column:1}
+    }
+  </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Dr. E. Gündeğer</a>
+  <div class="nav-right">
+    <ul>
+      <li><a href="index.html#consulting" data-en="Consulting" data-tr="Danışmanlık">Consulting</a></li>
+      <li><a href="index.html#projects"   data-en="Projects"   data-tr="Projeler">Projects</a></li>
+      <li><a href="speaking.html" class="active" data-en="Speaking" data-tr="Konuşmalar">Speaking</a></li>
+      <li><a href="index.html#research"   data-en="Research"   data-tr="Araştırma">Research</a></li>
+      <li><a href="index.html#about"      data-en="About"      data-tr="Hakkımda">About</a></li>
+      <li><a href="index.html#contact"    data-en="Contact"    data-tr="İletişim">Contact</a></li>
+    </ul>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn"        id="btn-tr" onclick="setLang('tr')">TR</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="wrap">
+    <div class="hero-label"
+         data-en="Speaking · Workshops · Corporate Training"
+         data-tr="Konuşmalar · Atölyeler · Kurumsal Eğitim">
+      Speaking · Workshops · Corporate Training
+    </div>
+    <h1>
+      <span data-en="Talks &amp; workshops" data-tr="Konuşmalar ve">Talks &amp; workshops</span><br>
+      <em data-en="that move the science" data-tr="bilimi ilerletenler">that move the science</em>
+    </h1>
+    <p class="hero-desc"
+       data-en="From conference keynotes to intensive R&D team workshops — translating computational biology, regulatory science, and AI into actionable insight for practitioners."
+       data-tr="Konferans açılış konuşmalarından yoğun Ar-Ge ekibi atölyelerine — hesaplamalı biyoloji, regülatuar bilim ve yapay zekâyı uygulayıcılar için eyleme geçirilebilir içgörüye dönüştürmek.">
+      From conference keynotes to intensive R&amp;D team workshops — translating computational biology, regulatory science, and AI into actionable insight for practitioners.
+    </p>
+    <div class="hero-badges">
+      <span class="badge" data-en="Turkish &amp; English" data-tr="Türkçe ve İngilizce">Turkish &amp; English</span>
+      <span class="badge" data-en="In-person &amp; Remote" data-tr="Yüz yüze ve Uzaktan">In-person &amp; Remote</span>
+      <span class="badge" data-en="Istanbul, Turkey" data-tr="İstanbul, Türkiye">Istanbul, Turkey</span>
+    </div>
+  </div>
+</section>
+
+<!-- TOPICS -->
+<section id="topics"><div class="wrap">
+  <div class="divider"></div>
+  <div class="reveal">
+    <div class="sec-label" data-en="// Speaking Topics" data-tr="// Konuşma Konuları">// Speaking Topics</div>
+    <h2 data-en="What I speak &lt;em&gt;about&lt;/em&gt;" data-tr="Konuştuğum &lt;em&gt;konular&lt;/em&gt;">What I speak <em>about</em></h2>
+    <p class="sec-desc"
+       data-en="Topics built from active research and real industry engagements — not slide decks disconnected from practice."
+       data-tr="Aktif araştırma ve gerçek endüstri çalışmalarından oluşturulan konular — pratikten kopuk sunum setleri değil.">
+      Topics built from active research and real industry engagements — not slide decks disconnected from practice.
+    </p>
+  </div>
+  <div class="topic-grid">
+
+    <div class="topic-card reveal">
+      <div class="topic-icon">⬡</div>
+      <h3 data-en="Computational Drug Discovery" data-tr="Hesaplamalı İlaç Keşfi">Computational Drug Discovery</h3>
+      <p data-en="Molecular docking, MD simulations, virtual screening, and ADMET prediction — practical workflows for pharma R&D teams."
+         data-tr="Moleküler docking, MD simülasyonları, sanal tarama ve ADMET tahmini — farma Ar-Ge ekipleri için pratik iş akışları.">
+        Molecular docking, MD simulations, virtual screening, and ADMET prediction — practical workflows for pharma R&amp;D teams.
+      </p>
+      <div class="tags"><span class="tag">CADD</span><span class="tag">GROMACS</span><span class="tag">AutoDock</span></div>
+    </div>
+
+    <div class="topic-card reveal">
+      <div class="topic-icon">◉</div>
+      <h3 data-en="AI &amp; ML in Pharma R&amp;D" data-tr="Farmada Yapay Zekâ ve ML">AI &amp; ML in Pharma R&amp;D</h3>
+      <p data-en="Practical AI integration for life science teams: LLM-assisted workflows, ML-based prediction, and prompt engineering for scientific contexts."
+         data-tr="Yaşam bilimleri ekipleri için pratik yapay zekâ entegrasyonu: LLM destekli iş akışları, ML tabanlı tahmin ve bilimsel bağlamlar için prompt mühendisliği.">
+        Practical AI integration for life science teams: LLM-assisted workflows, ML-based prediction, and prompt engineering for scientific contexts.
+      </p>
+      <div class="tags"><span class="tag">LLM</span><span class="tag">ML</span><span class="tag">Automation</span></div>
+    </div>
+
+    <div class="topic-card reveal">
+      <div class="topic-icon">∿</div>
+      <h3 data-en="Design of Experiments &amp; Bioprocess Statistics" data-tr="Deney Tasarımı ve Biyoproses İstatistiği">Design of Experiments &amp; Bioprocess Statistics</h3>
+      <p data-en="Making DoE practical: from design selection to response surface analysis. Applied statistics for upstream and downstream R&D."
+         data-tr="DoE'yi pratik hale getirmek: tasarım seçiminden yanıt yüzey analizine. Upstream ve downstream Ar-Ge için uygulamalı istatistik.">
+        Making DoE practical: from design selection to response surface analysis. Applied statistics for upstream and downstream R&amp;D.
+      </p>
+      <div class="tags"><span class="tag">DoE</span><span class="tag">RSM</span><span class="tag">ANOVA</span></div>
+    </div>
+
+    <div class="topic-card reveal">
+      <div class="topic-icon">◈</div>
+      <h3 data-en="Biosimilar Science &amp; Regulatory Strategy" data-tr="Biyobenzer Bilimi ve Regülatuar Strateji">Biosimilar Science &amp; Regulatory Strategy</h3>
+      <p data-en="Comparability framework, physicochemical characterization, and regulatory pathways for mAb and complex biologics development."
+         data-tr="mAb ve kompleks biyolojik ilaç geliştirme için karşılaştırılabilirlik çerçevesi, fizikokimyasal karakterizasyon ve regülatuar yollar.">
+        Comparability framework, physicochemical characterization, and regulatory pathways for mAb and complex biologics development.
+      </p>
+      <div class="tags"><span class="tag">mAb</span><span class="tag">ICH Q6B</span><span class="tag">EMA/TİTCK</span></div>
+    </div>
+
+    <div class="topic-card reveal">
+      <div class="topic-icon">⚛</div>
+      <h3 data-en="Molecular Modeling Fundamentals" data-tr="Moleküler Modelleme Temelleri">Molecular Modeling Fundamentals</h3>
+      <p data-en="From structure preparation to free energy estimation — hands-on introduction to molecular modeling for scientists without a computational background."
+         data-tr="Yapı hazırlığından serbest enerji tahminine — hesaplamalı alt yapısı olmayan bilim insanları için uygulamalı moleküler modellemeye giriş.">
+        From structure preparation to free energy estimation — hands-on introduction to molecular modeling for scientists without a computational background.
+      </p>
+      <div class="tags"><span class="tag">PyMOL</span><span class="tag">Flare</span><span class="tag">Beginner-friendly</span></div>
+    </div>
+
+    <div class="topic-card reveal">
+      <div class="topic-icon">⌬</div>
+      <h3 data-en="Bioequivalence &amp; Drug Regulation" data-tr="Biyoeşdeğerlik ve İlaç Regülasyonu">Bioequivalence &amp; Drug Regulation</h3>
+      <p data-en="BE study design, PK analysis, and navigating TİTCK, EMA, and FDA expectations for generic and biosimilar approvals."
+         data-tr="BE çalışma tasarımı, FK analizi ve jenerik ve biyobenzer onayları için TİTCK, EMA ve FDA beklentilerinde yön bulmak.">
+        BE study design, PK analysis, and navigating TİTCK, EMA, and FDA expectations for generic and biosimilar approvals.
+      </p>
+      <div class="tags"><span class="tag">PK/PD</span><span class="tag">NCA</span><span class="tag">Regulatory</span></div>
+    </div>
+
+  </div>
+</div></section>
+
+<!-- FORMATS -->
+<section id="formats"><div class="wrap">
+  <div class="divider"></div>
+  <div class="reveal">
+    <div class="sec-label" data-en="// Formats" data-tr="// Formatlar">// Formats</div>
+    <h2 data-en="How we can &lt;em&gt;work together&lt;/em&gt;" data-tr="Nasıl &lt;em&gt;birlikte çalışabiliriz&lt;/em&gt;">How we can <em>work together</em></h2>
+  </div>
+  <div class="format-grid">
+    <div class="format-card reveal">
+      <div class="format-dur" data-en="45 – 60 min" data-tr="45 – 60 dk">45 – 60 min</div>
+      <div class="format-type" data-en="Conference Keynote" data-tr="Konferans Açılış">Conference Keynote</div>
+      <p data-en="Narrative-driven talk for scientific or industry audiences. Includes live demos where relevant." data-tr="Bilimsel veya endüstri kitleleri için anlatı odaklı konuşma. Uygun durumlarda canlı demo içerir.">Narrative-driven talk for scientific or industry audiences. Includes live demos where relevant.</p>
+    </div>
+    <div class="format-card reveal">
+      <div class="format-dur" data-en="Half-day / Full-day" data-tr="Yarım gün / Tam gün">Half-day / Full-day</div>
+      <div class="format-type" data-en="Hands-on Workshop" data-tr="Uygulamalı Atölye">Hands-on Workshop</div>
+      <p data-en="Practical sessions with exercises, real datasets, and tool walkthroughs for small to medium groups." data-tr="Küçük ve orta gruplar için egzersizler, gerçek veri setleri ve araç eğitimleri içeren pratik oturumlar.">Practical sessions with exercises, real datasets, and tool walkthroughs for small to medium groups.</p>
+    </div>
+    <div class="format-card reveal">
+      <div class="format-dur" data-en="Multi-day / Multi-week" data-tr="Çok günlü / Çok haftalık">Multi-day / Multi-week</div>
+      <div class="format-type" data-en="Corporate Training" data-tr="Kurumsal Eğitim">Corporate Training</div>
+      <p data-en="Bespoke curriculum designed around your team's workflows, tools, and data. Assessment included." data-tr="Ekibinizin iş akışları, araçları ve verisine göre tasarlanmış özel müfredat. Değerlendirme dahil.">Bespoke curriculum designed around your team's workflows, tools, and data. Assessment included.</p>
+    </div>
+    <div class="format-card reveal">
+      <div class="format-dur" data-en="60 – 120 min" data-tr="60 – 120 dk">60 – 120 min</div>
+      <div class="format-type" data-en="Academic Seminar" data-tr="Akademik Seminer">Academic Seminar</div>
+      <p data-en="Research-focused seminars for university departments, graduate programs, or scientific societies." data-tr="Üniversite bölümleri, lisansüstü programlar veya bilimsel dernekler için araştırma odaklı seminerler.">Research-focused seminars for university departments, graduate programs, or scientific societies.</p>
+    </div>
+    <div class="format-card reveal">
+      <div class="format-dur" data-en="60 min" data-tr="60 dk">60 min</div>
+      <div class="format-type" data-en="Panel &amp; Discussion" data-tr="Panel ve Tartışma">Panel &amp; Discussion</div>
+      <p data-en="Moderated panels on AI in pharma, drug regulation, biosimilar policy, or computational science futures." data-tr="Farmada yapay zekâ, ilaç regülasyonu, biyobenzer politikası veya hesaplamalı bilim geleceği üzerine moderasyonlu paneller.">Moderated panels on AI in pharma, drug regulation, biosimilar policy, or computational science futures.</p>
+    </div>
+    <div class="format-card reveal">
+      <div class="format-dur" data-en="Custom" data-tr="Özel">Custom</div>
+      <div class="format-type" data-en="Podcast / Media" data-tr="Podcast / Medya">Podcast / Media</div>
+      <p data-en="Available for podcast interviews and expert commentary on computational biology, AI in drug discovery, and pharma regulation." data-tr="Hesaplamalı biyoloji, ilaç keşfinde yapay zekâ ve farma regülasyonu üzerine podcast röportajları ve uzman yorumu için müsait.">Available for podcast interviews and expert commentary on computational biology, AI in drug discovery, and pharma regulation.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- BOOKING FORM -->
+<section id="booking"><div class="wrap">
+  <div class="divider"></div>
+  <div class="reveal">
+    <div class="sec-label" data-en="// Book a Session" data-tr="// Oturum Rezerve Et">// Book a Session</div>
+    <h2 data-en="Tell me about &lt;em&gt;your event&lt;/em&gt;" data-tr="Etkinliğinizi &lt;em&gt;anlatın&lt;/em&gt;">Tell me about <em>your event</em></h2>
+    <p class="sec-desc"
+       data-en="Fill in the details below and I'll get back to you within 2 business days."
+       data-tr="Aşağıdaki bilgileri doldurun, 2 iş günü içinde size geri döneceğim.">
+      Fill in the details below and I'll get back to you within 2 business days.
+    </p>
+  </div>
+
+  <div id="form-success" class="form-success reveal">
+    <h3 data-en="Inquiry sent." data-tr="Başvuru gönderildi.">Inquiry sent.</h3>
+    <p data-en="Your email client should have opened with your message pre-filled. If not, email me directly at egundeger@gmail.com."
+       data-tr="E-posta istemciniz mesajınız önceden doldurulmuş olarak açılmış olmalı. Açılmadıysa doğrudan egundeger@gmail.com adresine yazın.">
+      Your email client should have opened with your message pre-filled. If not, email me directly at egundeger@gmail.com.
+    </p>
+  </div>
+
+  <form id="speaking-form" class="form-grid reveal" novalidate>
+    <div class="form-group">
+      <label for="f-name" data-en="Your Name *" data-tr="Adınız *">Your Name *</label>
+      <input id="f-name" type="text" required
+             data-placeholder-en="Dr. Jane Smith"
+             data-placeholder-tr="Dr. Ayşe Yılmaz"
+             placeholder="Dr. Jane Smith"/>
+    </div>
+    <div class="form-group">
+      <label for="f-org" data-en="Organization / Event" data-tr="Kuruluş / Etkinlik">Organization / Event</label>
+      <input id="f-org" type="text"
+             data-placeholder-en="ACME Pharma / SciConf 2026"
+             data-placeholder-tr="ACME Pharma / BilimKonf 2026"
+             placeholder="ACME Pharma / SciConf 2026"/>
+    </div>
+    <div class="form-group">
+      <label for="f-email" data-en="Your Email *" data-tr="E-postanız *">Your Email *</label>
+      <input id="f-email" type="email" required
+             placeholder="your@email.com"/>
+    </div>
+    <div class="form-group">
+      <label for="f-type" data-en="Format" data-tr="Format">Format</label>
+      <select id="f-type">
+        <option value="" data-en="Select a format…" data-tr="Format seçin…">Select a format…</option>
+        <option value="Conference Keynote" data-en="Conference Keynote" data-tr="Konferans Açılış">Conference Keynote</option>
+        <option value="Hands-on Workshop" data-en="Hands-on Workshop" data-tr="Uygulamalı Atölye">Hands-on Workshop</option>
+        <option value="Corporate Training" data-en="Corporate Training" data-tr="Kurumsal Eğitim">Corporate Training</option>
+        <option value="Academic Seminar" data-en="Academic Seminar" data-tr="Akademik Seminer">Academic Seminar</option>
+        <option value="Panel / Discussion" data-en="Panel / Discussion" data-tr="Panel / Tartışma">Panel / Discussion</option>
+        <option value="Podcast / Media" data-en="Podcast / Media" data-tr="Podcast / Medya">Podcast / Media</option>
+        <option value="Other" data-en="Other / Not sure" data-tr="Diğer / Emin değilim">Other / Not sure</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="f-topic" data-en="Topic of Interest" data-tr="İlgilenilen Konu">Topic of Interest</label>
+      <select id="f-topic">
+        <option value="" data-en="Select a topic…" data-tr="Konu seçin…">Select a topic…</option>
+        <option value="Computational Drug Discovery" data-en="Computational Drug Discovery" data-tr="Hesaplamalı İlaç Keşfi">Computational Drug Discovery</option>
+        <option value="AI &amp; ML in Pharma" data-en="AI &amp; ML in Pharma R&amp;D" data-tr="Farmada Yapay Zekâ ve ML">AI &amp; ML in Pharma R&amp;D</option>
+        <option value="Design of Experiments &amp; Bioprocess Statistics" data-en="DoE &amp; Bioprocess Statistics" data-tr="DoE ve Biyoproses İstatistiği">DoE &amp; Bioprocess Statistics</option>
+        <option value="Biosimilar Science &amp; Regulatory Strategy" data-en="Biosimilar &amp; Regulatory Strategy" data-tr="Biyobenzer ve Regülatuar Strateji">Biosimilar &amp; Regulatory Strategy</option>
+        <option value="Molecular Modeling Fundamentals" data-en="Molecular Modeling Fundamentals" data-tr="Moleküler Modelleme Temelleri">Molecular Modeling Fundamentals</option>
+        <option value="Bioequivalence &amp; Drug Regulation" data-en="Bioequivalence &amp; Drug Regulation" data-tr="Biyoeşdeğerlik ve İlaç Regülasyonu">Bioequivalence &amp; Drug Regulation</option>
+        <option value="Custom topic" data-en="Custom / Other topic" data-tr="Özel / Başka konu">Custom / Other topic</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="f-date" data-en="Event Date / Timeframe" data-tr="Etkinlik Tarihi / Zaman Aralığı">Event Date / Timeframe</label>
+      <input id="f-date" type="text"
+             data-placeholder-en="e.g. October 2026 / Q4 2026"
+             data-placeholder-tr="örn. Ekim 2026 / 2026 Q4"
+             placeholder="e.g. October 2026 / Q4 2026"/>
+    </div>
+    <div class="form-group form-full">
+      <label for="f-message" data-en="Tell me more about the event *" data-tr="Etkinlik hakkında daha fazlasını anlatın *">Tell me more about the event *</label>
+      <textarea id="f-message" required
+                data-placeholder-en="Audience profile, expected number of attendees, any specific goals or constraints…"
+                data-placeholder-tr="Hedef kitle profili, beklenen katılımcı sayısı, özel hedefler veya kısıtlamalar…"
+                placeholder="Audience profile, expected number of attendees, any specific goals or constraints…"></textarea>
+    </div>
+    <p class="form-note" data-en="* This form opens your email client with your inquiry pre-filled. Your data stays on your device." data-tr="* Bu form, başvurunuz önceden doldurulmuş olarak e-posta istemcinizi açar. Verileriniz cihazınızda kalır.">* This form opens your email client with your inquiry pre-filled. Your data stays on your device.</p>
+    <div class="form-submit">
+      <button type="submit" class="btn-submit" data-en="Send inquiry →" data-tr="Başvuruyu gönder →">Send inquiry →</button>
+      <span class="submit-note" data-en="Or email directly: egundeger@gmail.com" data-tr="Ya da doğrudan yazın: egundeger@gmail.com">Or email directly: <a href="mailto:egundeger@gmail.com" style="color:var(--amber);text-decoration:none">egundeger@gmail.com</a></span>
+    </div>
+  </form>
+
+</div></section>
+
+<footer>
+  <span>Dr. Ersin Gündeğer</span> · <a href="index.html">ersingundeger.github.io</a> · Istanbul, Turkey
+</footer>
+
+<script>
+/* ── LANG ── */
+function setLang(lang){
+  document.getElementById('btn-en').classList.toggle('active',lang==='en');
+  document.getElementById('btn-tr').classList.toggle('active',lang==='tr');
+  document.documentElement.lang=lang;
+  document.querySelectorAll('[data-en][data-tr]').forEach(el=>{
+    const val=el.getAttribute('data-'+lang);
+    if(!val)return;
+    const isHTML=['H1','H2','H3','H4','DIV','P','A','SPAN','BUTTON'].includes(el.tagName)&&val.includes('<');
+    if(isHTML)el.innerHTML=val;else el.textContent=val;
+  });
+  document.querySelectorAll('[data-placeholder-en][data-placeholder-tr]').forEach(el=>{
+    el.placeholder=el.getAttribute('data-placeholder-'+lang)||el.placeholder;
+  });
+  document.querySelectorAll('select option[data-en][data-tr]').forEach(opt=>{
+    opt.textContent=opt.getAttribute('data-'+lang)||opt.textContent;
+  });
+}
+
+/* ── CANVAS ── */
+const canvas=document.getElementById('canvas');
+const ctx=canvas.getContext('2d');
+let W,H,nodes;
+function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight}
+function init(n){nodes=[];for(let i=0;i<n;i++)nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.8+.8})}
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  nodes.forEach((n,i)=>{
+    n.x+=n.vx;n.y+=n.vy;
+    if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;
+    for(let j=i+1;j<nodes.length;j++){
+      const m=nodes[j],dx=n.x-m.x,dy=n.y-m.y,d=Math.hypot(dx,dy);
+      if(d<130){ctx.beginPath();ctx.strokeStyle=`rgba(201,149,58,${(1-d/130)*.5})`;ctx.lineWidth=.4;ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);ctx.stroke()}
+    }
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle='rgba(91,143,168,.6)';ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+resize();init(45);draw();
+window.addEventListener('resize',()=>{resize();init(45)});
+
+/* ── REVEAL ── */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*60);obs.unobserve(e.target)}});
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+/* ── FORM SUBMIT → mailto ── */
+document.getElementById('speaking-form').addEventListener('submit',function(e){
+  e.preventDefault();
+  const name=document.getElementById('f-name').value.trim();
+  const org=document.getElementById('f-org').value.trim();
+  const email=document.getElementById('f-email').value.trim();
+  const type=document.getElementById('f-type').value;
+  const topic=document.getElementById('f-topic').value;
+  const date=document.getElementById('f-date').value.trim();
+  const message=document.getElementById('f-message').value.trim();
+  if(!name||!email||!message){
+    const lang=document.documentElement.lang||'en';
+    alert(lang==='tr'?'Lütfen zorunlu alanları doldurun (Ad, E-posta, Mesaj).':'Please fill in the required fields (Name, Email, Message).');
+    return;
+  }
+  const subject=encodeURIComponent('Speaking Inquiry: '+(topic||type||'General'));
+  const body=encodeURIComponent(
+    'Name: '+name+'\n'+
+    (org?'Organization / Event: '+org+'\n':'')+
+    'Reply-to: '+email+'\n'+
+    (type?'Format: '+type+'\n':'')+
+    (topic?'Topic: '+topic+'\n':'')+
+    (date?'Date / Timeframe: '+date+'\n':'')+
+    '\nMessage:\n'+message
+  );
+  window.location.href='mailto:egundeger@gmail.com?subject='+subject+'&body='+body;
+  document.getElementById('speaking-form').style.display='none';
+  const suc=document.getElementById('form-success');
+  suc.style.display='block';
+  setTimeout(()=>suc.classList.add('visible'),50);
+});
+</script>
+</body>
+</html>

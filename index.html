@@ -70,13 +70,25 @@
 
     /* CONSULTING */
     .consulting-list{margin-top:3rem;display:flex;flex-direction:column;gap:1px}
-    .cons-item{display:grid;grid-template-columns:3rem 1fr auto;align-items:center;gap:1.5rem;padding:1.5rem;background:var(--surface);border:1px solid var(--border);transition:background .3s,border-color .3s}
-    .cons-item:hover{background:rgba(201,149,58,.05);border-color:var(--amber-dim)}
+    .cons-item{background:var(--surface);border:1px solid var(--border);transition:border-color .3s;cursor:pointer;overflow:hidden;user-select:none}
+    .cons-item.open{border-color:var(--amber-dim)}
+    .cons-header{display:grid;grid-template-columns:3rem 1fr auto;align-items:center;gap:1.5rem;padding:1.5rem;transition:background .3s}
+    .cons-item:hover .cons-header,.cons-item.open .cons-header{background:rgba(201,149,58,.04)}
     .cons-num{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--amber-dim);letter-spacing:.1em}
     .cons-text h3{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400;color:var(--white);margin-bottom:.25rem}
     .cons-text p{font-size:.85rem;color:var(--muted)}
-    .cons-arrow{color:var(--amber-dim);font-size:1rem;transition:transform .3s,color .3s}
-    .cons-item:hover .cons-arrow{transform:translateX(4px);color:var(--amber)}
+    .cons-arrow{color:var(--amber-dim);font-size:1rem;transition:transform .4s cubic-bezier(.4,0,.2,1),color .3s}
+    .cons-item:hover .cons-arrow,.cons-item.open .cons-arrow{color:var(--amber)}
+    .cons-item.open .cons-arrow{transform:rotate(90deg)}
+    .cons-detail{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1),opacity .3s ease;opacity:0}
+    .cons-item.open .cons-detail{max-height:360px;opacity:1}
+    .cons-detail-inner{margin:0 1.5rem;padding:1.25rem 0 1.5rem;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:start}
+    .cons-detail-inner > div > p{font-size:.85rem;color:var(--muted);line-height:1.65;margin-bottom:.75rem}
+    .cons-deliverables{list-style:none;display:flex;flex-direction:column;gap:.4rem}
+    .cons-deliverables li{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--steel);letter-spacing:.06em;padding-left:1.3em;position:relative}
+    .cons-deliverables li::before{content:'→';position:absolute;left:0;color:var(--amber-dim)}
+    .cons-cta-btn{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;padding:.7rem 1.25rem;border:1px solid var(--amber-dim);color:var(--amber);text-decoration:none;border-radius:2px;white-space:nowrap;display:inline-block;transition:all .3s;margin-top:.25rem}
+    .cons-cta-btn:hover{background:var(--amber);color:#0a0d12;transform:translateY(-2px)}
 
     /* PROJECT CARDS */
     .project-cards{margin-top:3rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:1.5rem}
@@ -159,6 +171,7 @@
       .project-cards{grid-template-columns:1fr}
       .stats-grid{grid-template-columns:repeat(2,1fr);gap:1.5rem}
       .eng-pills{flex-direction:column}
+      .cons-detail-inner{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -170,12 +183,13 @@
   <div class="nav-logo">Dr. E. Gündeğer</div>
   <div class="nav-right">
     <ul>
-      <li><a href="#consulting" data-en="Consulting"  data-tr="Danışmanlık">Consulting</a></li>
-      <li><a href="#projects"   data-en="Projects"    data-tr="Projeler">Projects</a></li>
-      <li><a href="#research"   data-en="Research"    data-tr="Araştırma">Research</a></li>
-      <li><a href="#teaching"   data-en="Teaching"    data-tr="Dersler">Teaching</a></li>
-      <li><a href="#about"      data-en="About"       data-tr="Hakkımda">About</a></li>
-      <li><a href="#contact"    data-en="Contact"     data-tr="İletişim">Contact</a></li>
+      <li><a href="#consulting"   data-en="Consulting"  data-tr="Danışmanlık">Consulting</a></li>
+      <li><a href="#projects"    data-en="Projects"    data-tr="Projeler">Projects</a></li>
+      <li><a href="speaking.html" data-en="Speaking"   data-tr="Konuşmalar">Speaking</a></li>
+      <li><a href="#research"    data-en="Research"    data-tr="Araştırma">Research</a></li>
+      <li><a href="#teaching"    data-en="Teaching"    data-tr="Dersler">Teaching</a></li>
+      <li><a href="#about"       data-en="About"       data-tr="Hakkımda">About</a></li>
+      <li><a href="#contact"     data-en="Contact"     data-tr="İletişim">Contact</a></li>
     </ul>
     <div class="lang-toggle">
       <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
@@ -248,96 +262,223 @@
     </p>
   </div>
   <div class="consulting-list">
+
     <div class="cons-item reveal">
-      <span class="cons-num">01</span>
-      <div class="cons-text">
-        <h3 data-en="Biosimilar Development Strategy" data-tr="Biyobenzer Geliştirme Stratejisi">Biosimilar Development Strategy</h3>
-        <p data-en="Comparability exercise design, physicochemical characterization strategy, TİTCK & EMA regulatory alignment"
-           data-tr="Karşılaştırılabilirlik çalışması tasarımı, fizikokimyasal karakterizasyon stratejisi, TİTCK ve EMA regülatuar uyum">
-          Comparability exercise design, physicochemical characterization strategy, TİTCK &amp; EMA regulatory alignment
-        </p>
-      </div><span class="cons-arrow">→</span>
+      <div class="cons-header">
+        <span class="cons-num">01</span>
+        <div class="cons-text">
+          <h3 data-en="Biosimilar Development Strategy" data-tr="Biyobenzer Geliştirme Stratejisi">Biosimilar Development Strategy</h3>
+          <p data-en="Comparability exercise design, physicochemical characterization strategy, TİTCK &amp; EMA regulatory alignment" data-tr="Karşılaştırılabilirlik çalışması tasarımı, fizikokimyasal karakterizasyon stratejisi, TİTCK ve EMA regülatuar uyum">Comparability exercise design, physicochemical characterization strategy, TİTCK &amp; EMA regulatory alignment</p>
+        </div>
+        <span class="cons-arrow">→</span>
+      </div>
+      <div class="cons-detail">
+        <div class="cons-detail-inner">
+          <div>
+            <p data-en="Full comparability framework from analytical characterization through PK/PD clinical similarity, mapped to TİTCK, EMA, and FDA regulatory pathways. Covers physicochemical, functional, and immunogenicity risk assessment." data-tr="TİTCK, EMA ve FDA regülatuar yollarına göre analitik karakterizasyondan PK/PD klinik benzerliğe tam karşılaştırılabilirlik çerçevesi. Fizikokimyasal, fonksiyonel ve immünojenisite risk değerlendirmesi.">Full comparability framework from analytical characterization through PK/PD clinical similarity, mapped to TİTCK, EMA, and FDA regulatory pathways. Covers physicochemical, functional, and immunogenicity risk assessment.</p>
+            <ul class="cons-deliverables">
+              <li data-en="Characterization &amp; comparability strategy document" data-tr="Karakterizasyon ve karşılaştırılabilirlik strateji belgesi">Characterization &amp; comparability strategy document</li>
+              <li data-en="Regulatory dossier outline (CTD Module 3)" data-tr="Regülatuar dosya taslağı (CTD Modül 3)">Regulatory dossier outline (CTD Module 3)</li>
+              <li data-en="Analytical panel &amp; acceptance criteria matrix" data-tr="Analitik panel ve kabul kriterleri matrisi">Analytical panel &amp; acceptance criteria matrix</li>
+            </ul>
+          </div>
+          <div><a class="cons-cta-btn" href="mailto:egundeger@gmail.com?subject=Consulting%3A%20Biosimilar%20Strategy" data-en="Let's work together →" data-tr="Birlikte çalışalım →">Let's work together →</a></div>
+        </div>
+      </div>
     </div>
+
     <div class="cons-item reveal">
-      <span class="cons-num">02</span>
-      <div class="cons-text">
-        <h3 data-en="Computational Drug Discovery" data-tr="Hesaplamalı İlaç Keşfi">Computational Drug Discovery</h3>
-        <p data-en="Molecular docking, MD-based binding free energy, ADMET in-silico profiling, virtual screening campaigns"
-           data-tr="Moleküler docking, MD tabanlı bağlanma serbest enerjisi, ADMET in-silico profilleme, sanal tarama kampanyaları">
-          Molecular docking, MD-based binding free energy, ADMET in-silico profiling, virtual screening campaigns
-        </p>
-      </div><span class="cons-arrow">→</span>
+      <div class="cons-header">
+        <span class="cons-num">02</span>
+        <div class="cons-text">
+          <h3 data-en="Computational Drug Discovery" data-tr="Hesaplamalı İlaç Keşfi">Computational Drug Discovery</h3>
+          <p data-en="Molecular docking, MD-based binding free energy, ADMET in-silico profiling, virtual screening campaigns" data-tr="Moleküler docking, MD tabanlı bağlanma serbest enerjisi, ADMET in-silico profilleme, sanal tarama kampanyaları">Molecular docking, MD-based binding free energy, ADMET in-silico profiling, virtual screening campaigns</p>
+        </div>
+        <span class="cons-arrow">→</span>
+      </div>
+      <div class="cons-detail">
+        <div class="cons-detail-inner">
+          <div>
+            <p data-en="End-to-end CADD support from target validation through lead optimization. Structure-based virtual screening, molecular docking, binding free energy via MD, and in-silico ADMET profiling for early-stage triage." data-tr="Hedef doğrulamadan öncü optimizasyona uçtan uca CADD desteği. Yapı tabanlı sanal tarama, moleküler docking, MD ile bağlanma serbest enerjisi ve erken aşama filtreleme için in-silico ADMET profilleme.">End-to-end CADD support from target validation through lead optimization. Structure-based virtual screening, molecular docking, binding free energy via MD, and in-silico ADMET profiling for early-stage triage.</p>
+            <ul class="cons-deliverables">
+              <li data-en="Virtual screening hit list &amp; ranking report" data-tr="Sanal tarama hit listesi ve sıralama raporu">Virtual screening hit list &amp; ranking report</li>
+              <li data-en="Docking &amp; MD binding stability analysis" data-tr="Docking ve MD bağlanma stabilitesi analizi">Docking &amp; MD binding stability analysis</li>
+              <li data-en="ADMET in-silico profile per compound" data-tr="Bileşik başına ADMET in-silico profil">ADMET in-silico profile per compound</li>
+            </ul>
+          </div>
+          <div><a class="cons-cta-btn" href="mailto:egundeger@gmail.com?subject=Consulting%3A%20Computational%20Drug%20Discovery" data-en="Discuss your target →" data-tr="Hedefinizi konuşalım →">Discuss your target →</a></div>
+        </div>
+      </div>
     </div>
+
     <div class="cons-item reveal">
-      <span class="cons-num">03</span>
-      <div class="cons-text">
-        <h3 data-en="Bioprocess Optimization & DoE" data-tr="Biyoproses Optimizasyonu ve DoE">Bioprocess Optimization &amp; DoE</h3>
-        <p data-en="Statistical design and analysis of upstream/downstream experiments; multivariate process modeling"
-           data-tr="Upstream/downstream deneylerin istatistiksel tasarımı ve analizi; çok değişkenli proses modelleme">
-          Statistical design and analysis of upstream/downstream experiments; multivariate process modeling
-        </p>
-      </div><span class="cons-arrow">→</span>
+      <div class="cons-header">
+        <span class="cons-num">03</span>
+        <div class="cons-text">
+          <h3 data-en="Bioprocess Optimization &amp; DoE" data-tr="Biyoproses Optimizasyonu ve DoE">Bioprocess Optimization &amp; DoE</h3>
+          <p data-en="Statistical design and analysis of upstream/downstream experiments; multivariate process modeling" data-tr="Upstream/downstream deneylerin istatistiksel tasarımı ve analizi; çok değişkenli proses modelleme">Statistical design and analysis of upstream/downstream experiments; multivariate process modeling</p>
+        </div>
+        <span class="cons-arrow">→</span>
+      </div>
+      <div class="cons-detail">
+        <div class="cons-detail-inner">
+          <div>
+            <p data-en="Full-factorial, CCD, Box-Behnken, and Plackett-Burman designs for fermentation, purification, and formulation. Response surface modeling, multivariate analysis, and optimized parameter set with confidence bounds." data-tr="Fermentasyon, saflaştırma ve formülasyon için tam faktöriyel, CCD, Box-Behnken ve Plackett-Burman tasarımları. Yanıt yüzey modelleme, çok değişkenli analiz ve güven sınırlı optimize parametre seti.">Full-factorial, CCD, Box-Behnken, and Plackett-Burman designs for fermentation, purification, and formulation. Response surface modeling, multivariate analysis, and optimized parameter set with confidence bounds.</p>
+            <ul class="cons-deliverables">
+              <li data-en="DoE design matrix &amp; run sheet" data-tr="DoE tasarım matrisi ve çalışma tablosu">DoE design matrix &amp; run sheet</li>
+              <li data-en="Statistical analysis report (RSM, ANOVA)" data-tr="İstatistiksel analiz raporu (RSM, ANOVA)">Statistical analysis report (RSM, ANOVA)</li>
+              <li data-en="Optimized process parameter set" data-tr="Optimize edilmiş proses parametre seti">Optimized process parameter set</li>
+            </ul>
+          </div>
+          <div><a class="cons-cta-btn" href="mailto:egundeger@gmail.com?subject=Consulting%3A%20DoE%20%26%20Bioprocess" data-en="Start your DoE →" data-tr="DoE'nizi başlatalım →">Start your DoE →</a></div>
+        </div>
+      </div>
     </div>
+
     <div class="cons-item reveal">
-      <span class="cons-num">04</span>
-      <div class="cons-text">
-        <h3 data-en="Bioequivalence & Statistical Analysis" data-tr="Biyoeşdeğerlik ve İstatistiksel Analiz">Bioequivalence &amp; Statistical Analysis</h3>
-        <p data-en="BE study design, ANOVA/NCA-based evaluation, biosimilarity statistical assessment for regulatory submissions"
-           data-tr="BE çalışma tasarımı, ANOVA/NCA tabanlı değerlendirme, regülatuar başvurular için biyobenzerlik istatistiksel değerlendirmesi">
-          BE study design, ANOVA/NCA-based evaluation, biosimilarity statistical assessment for regulatory submissions
-        </p>
-      </div><span class="cons-arrow">→</span>
+      <div class="cons-header">
+        <span class="cons-num">04</span>
+        <div class="cons-text">
+          <h3 data-en="Bioequivalence &amp; Statistical Analysis" data-tr="Biyoeşdeğerlik ve İstatistiksel Analiz">Bioequivalence &amp; Statistical Analysis</h3>
+          <p data-en="BE study design, ANOVA/NCA-based evaluation, biosimilarity statistical assessment for regulatory submissions" data-tr="BE çalışma tasarımı, ANOVA/NCA tabanlı değerlendirme, regülatuar başvurular için biyobenzerlik istatistiksel değerlendirmesi">BE study design, ANOVA/NCA-based evaluation, biosimilarity statistical assessment for regulatory submissions</p>
+        </div>
+        <span class="cons-arrow">→</span>
+      </div>
+      <div class="cons-detail">
+        <div class="cons-detail-inner">
+          <div>
+            <p data-en="BE study design (crossover, parallel, replicate), NCA-based PK parameter estimation, ANOVA, 90% CI calculation, and regulatory-ready statistical reporting aligned with EMA/FDA BE guidelines." data-tr="BE çalışma tasarımı (çapraz, paralel, tekrarlı), NCA tabanlı FK parametre tahmini, ANOVA, %90 GI hesabı ve EMA/FDA BE rehberleriyle uyumlu regülatuar istatistik raporu.">BE study design (crossover, parallel, replicate), NCA-based PK parameter estimation, ANOVA, 90% CI calculation, and regulatory-ready statistical reporting aligned with EMA/FDA BE guidelines.</p>
+            <ul class="cons-deliverables">
+              <li data-en="BE study design document" data-tr="BE çalışma tasarım belgesi">BE study design document</li>
+              <li data-en="Statistical analysis plan (SAP)" data-tr="İstatistiksel analiz planı (SAP)">Statistical analysis plan (SAP)</li>
+              <li data-en="Regulatory-ready BE statistical report" data-tr="Regülatuar uyumlu BE istatistik raporu">Regulatory-ready BE statistical report</li>
+            </ul>
+          </div>
+          <div><a class="cons-cta-btn" href="mailto:egundeger@gmail.com?subject=Consulting%3A%20Bioequivalence%20%26%20Statistics" data-en="Discuss your study →" data-tr="Çalışmanızı konuşalım →">Discuss your study →</a></div>
+        </div>
+      </div>
     </div>
+
     <div class="cons-item reveal">
-      <span class="cons-num">05</span>
-      <div class="cons-text">
-        <h3 data-en="Drug Dossier Review & Technical Assessment" data-tr="İlaç Dosyası İnceleme ve Teknik Değerlendirme">Drug Dossier Review &amp; Technical Assessment</h3>
-        <p data-en="Critical review of analytical, bioanalytical, biosimilar (mAb), complex generic (ASO, peptides) data packages for regulatory submissions"
-           data-tr="Analitik, biyoanalitik, biyobenzer (mAb), kompleks jenerik (ASO, peptidler) veri paketlerinin regülatuar başvuru için eleştirel incelemesi">
-          Critical review of analytical, bioanalytical, biosimilar (mAb), complex generic (ASO, peptides) data packages for regulatory submissions
-        </p>
-      </div><span class="cons-arrow">→</span>
+      <div class="cons-header">
+        <span class="cons-num">05</span>
+        <div class="cons-text">
+          <h3 data-en="Drug Dossier Review &amp; Technical Assessment" data-tr="İlaç Dosyası İnceleme ve Teknik Değerlendirme">Drug Dossier Review &amp; Technical Assessment</h3>
+          <p data-en="Critical review of analytical, bioanalytical, biosimilar (mAb), complex generic (ASO, peptides) data packages for regulatory submissions" data-tr="Analitik, biyoanalitik, biyobenzer (mAb), kompleks jenerik (ASO, peptidler) veri paketlerinin regülatuar başvuru için eleştirel incelemesi">Critical review of analytical, bioanalytical, biosimilar (mAb), complex generic (ASO, peptides) data packages for regulatory submissions</p>
+        </div>
+        <span class="cons-arrow">→</span>
+      </div>
+      <div class="cons-detail">
+        <div class="cons-detail-inner">
+          <div>
+            <p data-en="Critical gap analysis of CTD Module 3 analytical sections, bioanalytical method validation, and similarity/biosimilarity data packages for mAb, biosimilar, ASO, peptide, and complex generic regulatory submissions." data-tr="mAb, biyobenzer, ASO, peptid ve kompleks jenerik regülatuar başvuruları için CTD Modül 3 analitik bölümleri, biyoanalitik yöntem validasyonu ve benzerlik/biyobenzerlik veri paketlerinin kritik boşluk analizi.">Critical gap analysis of CTD Module 3 analytical sections, bioanalytical method validation, and similarity/biosimilarity data packages for mAb, biosimilar, ASO, peptide, and complex generic regulatory submissions.</p>
+            <ul class="cons-deliverables">
+              <li data-en="Gap analysis &amp; regulatory risk report" data-tr="Boşluk analizi ve regülatuar risk raporu">Gap analysis &amp; regulatory risk report</li>
+              <li data-en="Annotated review with specific comments" data-tr="Spesifik yorumlu açıklamalı inceleme">Annotated review with specific comments</li>
+              <li data-en="Regulatory improvement roadmap" data-tr="Regülatuar iyileştirme yol haritası">Regulatory improvement roadmap</li>
+            </ul>
+          </div>
+          <div><a class="cons-cta-btn" href="mailto:egundeger@gmail.com?subject=Consulting%3A%20Dossier%20Review" data-en="Submit your dossier →" data-tr="Dosyanızı gönderin →">Submit your dossier →</a></div>
+        </div>
+      </div>
     </div>
+
     <div class="cons-item reveal">
-      <span class="cons-num">06</span>
-      <div class="cons-text">
-        <h3 data-en="GLP/GMP Documentation & SOPs" data-tr="GLP/GMP Uyumlu Dokümantasyon ve SOP'lar">GLP/GMP Documentation &amp; SOPs</h3>
-        <p data-en="GLP/GMP-compliant SOP authoring, URS drafting, validation protocols, and quality system support for bioanalytical and BE labs"
-           data-tr="Biyoanalitik ve biyoeşdeğerlik laboratuvarları için GLP/GMP uyumlu SOP yazımı, URS hazırlama, validasyon protokolleri ve kalite sistemi desteği">
-          GLP/GMP-compliant SOP authoring, URS drafting, validation protocols, and quality system support for bioanalytical and BE labs
-        </p>
-      </div><span class="cons-arrow">→</span>
+      <div class="cons-header">
+        <span class="cons-num">06</span>
+        <div class="cons-text">
+          <h3 data-en="GLP/GMP Documentation &amp; SOPs" data-tr="GLP/GMP Uyumlu Dokümantasyon ve SOP'lar">GLP/GMP Documentation &amp; SOPs</h3>
+          <p data-en="GLP/GMP-compliant SOP authoring, URS drafting, validation protocols, and quality system support for bioanalytical and BE labs" data-tr="Biyoanalitik ve biyoeşdeğerlik laboratuvarları için GLP/GMP uyumlu SOP yazımı, URS hazırlama, validasyon protokolleri ve kalite sistemi desteği">GLP/GMP-compliant SOP authoring, URS drafting, validation protocols, and quality system support for bioanalytical and BE labs</p>
+        </div>
+        <span class="cons-arrow">→</span>
+      </div>
+      <div class="cons-detail">
+        <div class="cons-detail-inner">
+          <div>
+            <p data-en="Authoring GLP/GMP-compliant SOPs, URS, and qualification protocols (IQ/OQ/PQ) for bioanalytical and BE laboratories. Quality system documentation, audit preparation, and regulatory inspection readiness." data-tr="Biyoanalitik ve biyoeşdeğerlik laboratuvarları için GLP/GMP uyumlu SOP'lar, URS ve yeterlilik protokolleri (IQ/OQ/PQ) yazımı. Kalite sistemi dokümantasyonu, denetim hazırlığı ve regülatuar muayene hazırlığı.">Authoring GLP/GMP-compliant SOPs, URS, and qualification protocols (IQ/OQ/PQ) for bioanalytical and BE laboratories. Quality system documentation, audit preparation, and regulatory inspection readiness.</p>
+            <ul class="cons-deliverables">
+              <li data-en="Draft SOPs &amp; URS documents" data-tr="Taslak SOP'lar ve URS belgeleri">Draft SOPs &amp; URS documents</li>
+              <li data-en="IQ/OQ/PQ qualification protocol templates" data-tr="IQ/OQ/PQ yeterlilik protokol şablonları">IQ/OQ/PQ qualification protocol templates</li>
+              <li data-en="Quality system review &amp; gap report" data-tr="Kalite sistemi incelemesi ve boşluk raporu">Quality system review &amp; gap report</li>
+            </ul>
+          </div>
+          <div><a class="cons-cta-btn" href="mailto:egundeger@gmail.com?subject=Consulting%3A%20GLP%2FGMP%20Documentation" data-en="Request a doc plan →" data-tr="Dokümantasyon planı isteyin →">Request a doc plan →</a></div>
+        </div>
+      </div>
     </div>
+
     <div class="cons-item reveal">
-      <span class="cons-num">07</span>
-      <div class="cons-text">
-        <h3 data-en="Custom Scientific Training Programs" data-tr="Özel Bilimsel Eğitim Programları">Custom Scientific Training Programs</h3>
-        <p data-en="Bespoke training for R&D teams or individuals: applied statistics, DoE, molecular modeling, bioinformatics, AI tools — in-person or remote"
-           data-tr="Ar-Ge ekipleri veya bireyler için özel eğitim: uygulamalı istatistik, DoE, moleküler modelleme, biyoinformatik, yapay zekâ araçları — yüz yüze veya uzaktan">
-          Bespoke training for R&amp;D teams or individuals: applied statistics, DoE, molecular modeling, bioinformatics, AI tools — in-person or remote
-        </p>
-      </div><span class="cons-arrow">→</span>
+      <div class="cons-header">
+        <span class="cons-num">07</span>
+        <div class="cons-text">
+          <h3 data-en="Custom Scientific Training Programs" data-tr="Özel Bilimsel Eğitim Programları">Custom Scientific Training Programs</h3>
+          <p data-en="Bespoke training for R&amp;D teams or individuals: applied statistics, DoE, molecular modeling, bioinformatics, AI tools — in-person or remote" data-tr="Ar-Ge ekipleri veya bireyler için özel eğitim: uygulamalı istatistik, DoE, moleküler modelleme, biyoinformatik, yapay zekâ araçları — yüz yüze veya uzaktan">Bespoke training for R&amp;D teams or individuals: applied statistics, DoE, molecular modeling, bioinformatics, AI tools — in-person or remote</p>
+        </div>
+        <span class="cons-arrow">→</span>
+      </div>
+      <div class="cons-detail">
+        <div class="cons-detail-inner">
+          <div>
+            <p data-en="Fully customized curricula built around your team's actual workflows and data. Available in-person or remote, from single-day workshops to multi-week programs. Topics include statistics, DoE, molecular modeling, bioinformatics, and AI tools." data-tr="Ekibinizin gerçek iş akışları ve verilerine göre tamamen özelleştirilmiş müfredatlar. Tek günlük atölyelerden çok haftalık programlara kadar yüz yüze veya uzaktan. İstatistik, DoE, moleküler modelleme, biyoinformatik ve yapay zekâ araçlarını kapsar.">Fully customized curricula built around your team's actual workflows and data. Available in-person or remote, from single-day workshops to multi-week programs. Topics include statistics, DoE, molecular modeling, bioinformatics, and AI tools.</p>
+            <ul class="cons-deliverables">
+              <li data-en="Custom curriculum &amp; training materials" data-tr="Özel müfredat ve eğitim materyalleri">Custom curriculum &amp; training materials</li>
+              <li data-en="Workshop exercises &amp; case studies" data-tr="Atölye egzersizleri ve vaka çalışmaları">Workshop exercises &amp; case studies</li>
+              <li data-en="Competency assessment &amp; follow-up" data-tr="Yetkinlik değerlendirmesi ve takip">Competency assessment &amp; follow-up</li>
+            </ul>
+          </div>
+          <div><a class="cons-cta-btn" href="mailto:egundeger@gmail.com?subject=Consulting%3A%20Training%20Program" data-en="Design your training →" data-tr="Eğitim programınızı tasarlayalım →">Design your training →</a></div>
+        </div>
+      </div>
     </div>
+
     <div class="cons-item reveal">
-      <span class="cons-num">08</span>
-      <div class="cons-text">
-        <h3 data-en="AI Workflow Integration & Web Tools" data-tr="İş Akışlarına AI Entegrasyonu ve Web Araçları">AI Workflow Integration &amp; Web Tools</h3>
-        <p data-en="Custom AI-assisted automation, prompt engineering, and scientific web apps or dashboards tailored to pharma and life science workflows"
-           data-tr="Farma ve yaşam bilimleri iş akışlarına özel yapay zekâ destekli otomasyon, prompt mühendisliği ve bilimsel web uygulamaları veya gösterge panelleri">
-          Custom AI-assisted automation, prompt engineering, and scientific web apps or dashboards tailored to pharma and life science workflows
-        </p>
-      </div><span class="cons-arrow">→</span>
+      <div class="cons-header">
+        <span class="cons-num">08</span>
+        <div class="cons-text">
+          <h3 data-en="AI Workflow Integration &amp; Web Tools" data-tr="İş Akışlarına AI Entegrasyonu ve Web Araçları">AI Workflow Integration &amp; Web Tools</h3>
+          <p data-en="Custom AI-assisted automation, prompt engineering, and scientific web apps or dashboards tailored to pharma and life science workflows" data-tr="Farma ve yaşam bilimleri iş akışlarına özel yapay zekâ destekli otomasyon, prompt mühendisliği ve bilimsel web uygulamaları veya gösterge panelleri">Custom AI-assisted automation, prompt engineering, and scientific web apps or dashboards tailored to pharma and life science workflows</p>
+        </div>
+        <span class="cons-arrow">→</span>
+      </div>
+      <div class="cons-detail">
+        <div class="cons-detail-inner">
+          <div>
+            <p data-en="Design and deployment of AI-assisted R&amp;D tools: LLM-powered analysis pipelines, ML-based prediction models, prompt-engineered laboratory assistants, and custom scientific web dashboards." data-tr="Yapay zekâ destekli Ar-Ge araçlarının tasarımı ve dağıtımı: LLM destekli analiz boru hatları, ML tabanlı tahmin modelleri, prompt mühendisliği laboratuvar asistanları ve özel bilimsel web gösterge panelleri.">Design and deployment of AI-assisted R&amp;D tools: LLM-powered analysis pipelines, ML-based prediction models, prompt-engineered laboratory assistants, and custom scientific web dashboards.</p>
+            <ul class="cons-deliverables">
+              <li data-en="Working prototype or deployed web app" data-tr="Çalışan prototip veya yayınlanmış web uygulaması">Working prototype or deployed web app</li>
+              <li data-en="Integration &amp; deployment guide" data-tr="Entegrasyon ve dağıtım kılavuzu">Integration &amp; deployment guide</li>
+              <li data-en="Documentation &amp; maintenance notes" data-tr="Dokümantasyon ve bakım notları">Documentation &amp; maintenance notes</li>
+            </ul>
+          </div>
+          <div><a class="cons-cta-btn" href="mailto:egundeger@gmail.com?subject=Consulting%3A%20AI%20Integration" data-en="Request a demo →" data-tr="Demo isteyin →">Request a demo →</a></div>
+        </div>
+      </div>
     </div>
+
     <div class="cons-item reveal">
-      <span class="cons-num">09</span>
-      <div class="cons-text">
-        <h3 data-en="End-to-End Lab & Capability Buildout" data-tr="Sıfırdan Laboratuvar ve Kapasite Kurulumu">End-to-End Lab &amp; Capability Buildout</h3>
-        <p data-en="Guidance on setting up bioanalytical or computational research units from scratch: equipment selection, SOPs, software stack, staffing, and regulatory positioning"
-           data-tr="Biyoanalitik veya hesaplamalı araştırma birimlerini sıfırdan kurma rehberliği: ekipman seçimi, SOP'lar, yazılım yığını, personel ve regülatuar konumlandırma">
-          Guidance on setting up bioanalytical or computational research units from scratch: equipment selection, SOPs, software stack, staffing, and regulatory positioning
-        </p>
-      </div><span class="cons-arrow">→</span>
+      <div class="cons-header">
+        <span class="cons-num">09</span>
+        <div class="cons-text">
+          <h3 data-en="End-to-End Lab &amp; Capability Buildout" data-tr="Sıfırdan Laboratuvar ve Kapasite Kurulumu">End-to-End Lab &amp; Capability Buildout</h3>
+          <p data-en="Guidance on setting up bioanalytical or computational research units from scratch: equipment selection, SOPs, software stack, staffing, and regulatory positioning" data-tr="Biyoanalitik veya hesaplamalı araştırma birimlerini sıfırdan kurma rehberliği: ekipman seçimi, SOP'lar, yazılım yığını, personel ve regülatuar konumlandırma">Guidance on setting up bioanalytical or computational research units from scratch: equipment selection, SOPs, software stack, staffing, and regulatory positioning</p>
+        </div>
+        <span class="cons-arrow">→</span>
+      </div>
+      <div class="cons-detail">
+        <div class="cons-detail-inner">
+          <div>
+            <p data-en="Comprehensive advisory for establishing bioanalytical or computational R&amp;D units from scratch: equipment specs, vendor selection, SOP starter pack, staffing plan, software stack selection, and regulatory positioning strategy." data-tr="Sıfırdan biyoanalitik veya hesaplamalı Ar-Ge birimlerinin kurulumu için kapsamlı danışmanlık: ekipman teknik özellikleri, tedarikçi seçimi, başlangıç SOP paketi, personel planı, yazılım yığını seçimi ve regülatuar konumlandırma stratejisi.">Comprehensive advisory for establishing bioanalytical or computational R&amp;D units from scratch: equipment specs, vendor selection, SOP starter pack, staffing plan, software stack selection, and regulatory positioning strategy.</p>
+            <ul class="cons-deliverables">
+              <li data-en="Lab setup roadmap &amp; timeline" data-tr="Laboratuvar kurulum yol haritası ve zaman çizelgesi">Lab setup roadmap &amp; timeline</li>
+              <li data-en="Equipment &amp; vendor shortlist" data-tr="Ekipman ve tedarikçi kısa listesi">Equipment &amp; vendor shortlist</li>
+              <li data-en="SOP starter pack &amp; regulatory brief" data-tr="Başlangıç SOP paketi ve regülatuar özet">SOP starter pack &amp; regulatory brief</li>
+            </ul>
+          </div>
+          <div><a class="cons-cta-btn" href="mailto:egundeger@gmail.com?subject=Consulting%3A%20Lab%20Buildout" data-en="Start planning →" data-tr="Planlamaya başlayalım →">Start planning →</a></div>
+        </div>
+      </div>
     </div>
+
   </div>
   <div class="engagement-modes reveal">
     <div class="eng-label" data-en="// Engagement Models" data-tr="// Çalışma Modelleri">// Engagement Models</div>
@@ -714,6 +855,16 @@ const obs=new IntersectionObserver((entries)=>{
   entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*60);obs.unobserve(e.target)}});
 },{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+/* ── CONSULTING ACCORDION ── */
+document.querySelectorAll('.cons-item').forEach(item=>{
+  item.addEventListener('click',e=>{
+    if(e.target.closest('a'))return; // don't toggle when clicking CTA link
+    const wasOpen=item.classList.contains('open');
+    document.querySelectorAll('.cons-item.open').forEach(i=>i.classList.remove('open'));
+    if(!wasOpen)item.classList.add('open');
+  });
+});
 </script>
 </body>
 </html>
