@@ -192,8 +192,8 @@
       <li><a href="#contact"     data-en="Contact"     data-tr="İletişim">Contact</a></li>
     </ul>
     <div class="lang-toggle">
-      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
-      <button class="lang-btn"        id="btn-tr" onclick="setLang('tr')">TR</button>
+      <button class="lang-btn"        id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn active" id="btn-tr" onclick="setLang('tr')">TR</button>
     </div>
   </div>
 </nav>
@@ -855,6 +855,9 @@ const obs=new IntersectionObserver((entries)=>{
   entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*60);obs.unobserve(e.target)}});
 },{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+/* ── DEFAULT LANG ── */
+setLang('tr');
 
 /* ── CONSULTING ACCORDION ── */
 document.querySelectorAll('.cons-item').forEach(item=>{

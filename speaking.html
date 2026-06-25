@@ -128,8 +128,8 @@
       <li><a href="index.html#contact"    data-en="Contact"    data-tr="İletişim">Contact</a></li>
     </ul>
     <div class="lang-toggle">
-      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
-      <button class="lang-btn"        id="btn-tr" onclick="setLang('tr')">TR</button>
+      <button class="lang-btn"        id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn active" id="btn-tr" onclick="setLang('tr')">TR</button>
     </div>
   </div>
 </nav>
@@ -412,6 +412,9 @@ function draw(){
 }
 resize();init(45);draw();
 window.addEventListener('resize',()=>{resize();init(45)});
+
+/* ── DEFAULT LANG ── */
+setLang('tr');
 
 /* ── REVEAL ── */
 const obs=new IntersectionObserver(entries=>{
