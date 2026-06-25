@@ -78,6 +78,28 @@
     .cons-arrow{color:var(--amber-dim);font-size:1rem;transition:transform .3s,color .3s}
     .cons-item:hover .cons-arrow{transform:translateX(4px);color:var(--amber)}
 
+    /* PROJECT CARDS */
+    .project-cards{margin-top:3rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:1.5rem}
+    .project-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2rem;transition:border-color .3s,transform .3s;position:relative;overflow:hidden}
+    .project-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),var(--steel));opacity:0;transition:opacity .3s}
+    .project-card:hover{border-color:var(--amber-dim);transform:translateY(-4px)}
+    .project-card:hover::before{opacity:1}
+    .client-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)}
+    .logo-mark{width:52px;height:52px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:500;font-size:.75rem;letter-spacing:.04em;flex-shrink:0}
+    .logo-trustlife{background:rgba(0,120,200,.12);border:1px solid rgba(0,120,200,.25);color:#5ab4e8}
+    .logo-yerlika{background:rgba(0,160,90,.12);border:1px solid rgba(0,160,90,.25);color:#4dd68a}
+    .client-info{display:flex;flex-direction:column;gap:.2rem}
+    .client-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400;color:var(--white)}
+    .client-url{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em}
+    .client-url a{color:inherit;text-decoration:none;transition:color .2s}
+    .client-url a:hover{color:var(--amber)}
+    .project-card h3{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--white);margin-bottom:.6rem}
+    .project-card p{font-size:.88rem;color:var(--muted);line-height:1.65;margin-bottom:.75rem}
+    .project-meta{display:flex;gap:1.5rem;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border);flex-wrap:wrap}
+    .meta-item{display:flex;flex-direction:column;gap:.25rem}
+    .meta-label{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--amber-dim);letter-spacing:.18em;text-transform:uppercase}
+    .meta-value{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted)}
+
     /* ABOUT */
     #about{padding:5rem 0}
     .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:3rem;align-items:start}
@@ -118,6 +140,7 @@
       .nav-right{gap:1rem}
       .cons-item{grid-template-columns:2.5rem 1fr}
       .cons-arrow{display:none}
+      .project-cards{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -131,6 +154,7 @@
     <ul>
       <li><a href="#research"   data-en="Research"    data-tr="Araştırma">Research</a></li>
       <li><a href="#consulting" data-en="Consulting"  data-tr="Danışmanlık">Consulting</a></li>
+      <li><a href="#projects"   data-en="Projects"    data-tr="Projeler">Projects</a></li>
       <li><a href="#teaching"   data-en="Teaching"    data-tr="Dersler">Teaching</a></li>
       <li><a href="#about"      data-en="About"       data-tr="Hakkımda">About</a></li>
       <li><a href="#contact"    data-en="Contact"     data-tr="İletişim">Contact</a></li>
@@ -246,9 +270,9 @@
     <div class="sec-label" data-en="// Consulting Services" data-tr="// Danışmanlık Hizmetleri">// Consulting Services</div>
     <h2 data-en="Scientific expertise, &lt;em&gt;applied&lt;/em&gt;" data-tr="Bilimsel uzmanlık, &lt;em&gt;uygulamada&lt;/em&gt;">Scientific expertise, <em>applied</em></h2>
     <p class="sec-desc"
-       data-en="Available for project-based consulting in computational chemistry, biosimilar strategy, and bioprocess analytics."
-       data-tr="Hesaplamalı kimya, biyobenzer stratejisi ve biyoproses analitiği alanlarında proje bazlı danışmanlık için müsaitim.">
-      Available for project-based consulting in computational chemistry, biosimilar strategy, and bioprocess analytics.
+       data-en="Project-based and retainer consulting across computational drug discovery, regulatory science, biopharma analytics, and AI-enabled workflows."
+       data-tr="Hesaplamalı ilaç keşfi, regülatuar bilim, biyofarma analitiği ve yapay zekâ destekli iş akışları alanlarında proje bazlı ve sürekli danışmanlık.">
+      Project-based and retainer consulting across computational drug discovery, regulatory science, biopharma analytics, and AI-enabled workflows.
     </p>
   </div>
   <div class="consulting-list">
@@ -258,7 +282,7 @@
         <h3 data-en="Biosimilar Development Strategy" data-tr="Biyobenzer Geliştirme Stratejisi">Biosimilar Development Strategy</h3>
         <p data-en="Comparability exercise design, physicochemical characterization strategy, TİTCK & EMA regulatory alignment"
            data-tr="Karşılaştırılabilirlik çalışması tasarımı, fizikokimyasal karakterizasyon stratejisi, TİTCK ve EMA regülatuar uyum">
-          Comparability exercise design, physicochemical characterization strategy, TİTCK & EMA regulatory alignment
+          Comparability exercise design, physicochemical characterization strategy, TİTCK &amp; EMA regulatory alignment
         </p>
       </div><span class="cons-arrow">→</span>
     </div>
@@ -275,7 +299,7 @@
     <div class="cons-item reveal">
       <span class="cons-num">03</span>
       <div class="cons-text">
-        <h3 data-en="Bioprocess Optimization & DoE" data-tr="Biyoproses Optimizasyonu ve DoE">Bioprocess Optimization & DoE</h3>
+        <h3 data-en="Bioprocess Optimization & DoE" data-tr="Biyoproses Optimizasyonu ve DoE">Bioprocess Optimization &amp; DoE</h3>
         <p data-en="Statistical design and analysis of upstream/downstream experiments; multivariate process modeling"
            data-tr="Upstream/downstream deneylerin istatistiksel tasarımı ve analizi; çok değişkenli proses modelleme">
           Statistical design and analysis of upstream/downstream experiments; multivariate process modeling
@@ -285,7 +309,7 @@
     <div class="cons-item reveal">
       <span class="cons-num">04</span>
       <div class="cons-text">
-        <h3 data-en="Bioequivalence & Statistical Analysis" data-tr="Biyoeşdeğerlik ve İstatistiksel Analiz">Bioequivalence & Statistical Analysis</h3>
+        <h3 data-en="Bioequivalence & Statistical Analysis" data-tr="Biyoeşdeğerlik ve İstatistiksel Analiz">Bioequivalence &amp; Statistical Analysis</h3>
         <p data-en="BE study design, ANOVA/NCA-based evaluation, biosimilarity statistical assessment for regulatory submissions"
            data-tr="BE çalışma tasarımı, ANOVA/NCA tabanlı değerlendirme, regülatuar başvurular için biyobenzerlik istatistiksel değerlendirmesi">
           BE study design, ANOVA/NCA-based evaluation, biosimilarity statistical assessment for regulatory submissions
@@ -295,13 +319,161 @@
     <div class="cons-item reveal">
       <span class="cons-num">05</span>
       <div class="cons-text">
-        <h3 data-en="Scientific Training & Workshops" data-tr="Bilimsel Eğitim ve Atölyeler">Scientific Training & Workshops</h3>
-        <p data-en="Industry R&D teams — molecular modeling fundamentals, DoE methodology, AI tools in pharmaceutical research"
-           data-tr="Endüstri Ar-Ge ekipleri — moleküler modelleme temelleri, DoE metodolojisi, farmasötik araştırmada yapay zekâ araçları">
-          Industry R&D teams — molecular modeling fundamentals, DoE methodology, AI tools in pharmaceutical research
+        <h3 data-en="Drug Dossier Review & Technical Assessment" data-tr="İlaç Dosyası İnceleme ve Teknik Değerlendirme">Drug Dossier Review &amp; Technical Assessment</h3>
+        <p data-en="Critical review of analytical, bioanalytical, biosimilar (mAb), complex generic (ASO, peptides) data packages for regulatory submissions"
+           data-tr="Analitik, biyoanalitik, biyobenzer (mAb), kompleks jenerik (ASO, peptidler) veri paketlerinin regülatuar başvuru için eleştirel incelemesi">
+          Critical review of analytical, bioanalytical, biosimilar (mAb), complex generic (ASO, peptides) data packages for regulatory submissions
         </p>
       </div><span class="cons-arrow">→</span>
     </div>
+    <div class="cons-item reveal">
+      <span class="cons-num">06</span>
+      <div class="cons-text">
+        <h3 data-en="GLP/GMP Documentation & SOPs" data-tr="GLP/GMP Uyumlu Dokümantasyon ve SOP'lar">GLP/GMP Documentation &amp; SOPs</h3>
+        <p data-en="GLP/GMP-compliant SOP authoring, URS drafting, validation protocols, and quality system support for bioanalytical and BE labs"
+           data-tr="Biyoanalitik ve biyoeşdeğerlik laboratuvarları için GLP/GMP uyumlu SOP yazımı, URS hazırlama, validasyon protokolleri ve kalite sistemi desteği">
+          GLP/GMP-compliant SOP authoring, URS drafting, validation protocols, and quality system support for bioanalytical and BE labs
+        </p>
+      </div><span class="cons-arrow">→</span>
+    </div>
+    <div class="cons-item reveal">
+      <span class="cons-num">07</span>
+      <div class="cons-text">
+        <h3 data-en="Custom Scientific Training Programs" data-tr="Özel Bilimsel Eğitim Programları">Custom Scientific Training Programs</h3>
+        <p data-en="Bespoke training for R&D teams or individuals: applied statistics, DoE, molecular modeling, bioinformatics, AI tools — in-person or remote"
+           data-tr="Ar-Ge ekipleri veya bireyler için özel eğitim: uygulamalı istatistik, DoE, moleküler modelleme, biyoinformatik, yapay zekâ araçları — yüz yüze veya uzaktan">
+          Bespoke training for R&amp;D teams or individuals: applied statistics, DoE, molecular modeling, bioinformatics, AI tools — in-person or remote
+        </p>
+      </div><span class="cons-arrow">→</span>
+    </div>
+    <div class="cons-item reveal">
+      <span class="cons-num">08</span>
+      <div class="cons-text">
+        <h3 data-en="AI Workflow Integration & Web Tools" data-tr="İş Akışlarına AI Entegrasyonu ve Web Araçları">AI Workflow Integration &amp; Web Tools</h3>
+        <p data-en="Custom AI-assisted automation, prompt engineering, and scientific web apps or dashboards tailored to pharma and life science workflows"
+           data-tr="Farma ve yaşam bilimleri iş akışlarına özel yapay zekâ destekli otomasyon, prompt mühendisliği ve bilimsel web uygulamaları veya gösterge panelleri">
+          Custom AI-assisted automation, prompt engineering, and scientific web apps or dashboards tailored to pharma and life science workflows
+        </p>
+      </div><span class="cons-arrow">→</span>
+    </div>
+    <div class="cons-item reveal">
+      <span class="cons-num">09</span>
+      <div class="cons-text">
+        <h3 data-en="End-to-End Lab & Capability Buildout" data-tr="Sıfırdan Laboratuvar ve Kapasite Kurulumu">End-to-End Lab &amp; Capability Buildout</h3>
+        <p data-en="Guidance on setting up bioanalytical or computational research units from scratch: equipment selection, SOPs, software stack, staffing, and regulatory positioning"
+           data-tr="Biyoanalitik veya hesaplamalı araştırma birimlerini sıfırdan kurma rehberliği: ekipman seçimi, SOP'lar, yazılım yığını, personel ve regülatuar konumlandırma">
+          Guidance on setting up bioanalytical or computational research units from scratch: equipment selection, SOPs, software stack, staffing, and regulatory positioning
+        </p>
+      </div><span class="cons-arrow">→</span>
+    </div>
+  </div>
+</div></section>
+
+<!-- PROJECTS -->
+<section id="projects"><div class="wrap">
+  <div class="divider"></div>
+  <div class="reveal">
+    <div class="sec-label" data-en="// Client Projects" data-tr="// Referans Projeler">// Client Projects</div>
+    <h2 data-en="Consulting, &lt;em&gt;in practice&lt;/em&gt;" data-tr="Danışmanlık, &lt;em&gt;uygulamada&lt;/em&gt;">Consulting, <em>in practice</em></h2>
+    <p class="sec-desc"
+       data-en="Selected engagements with industry R&D organizations — delivered outcomes, not proposals."
+       data-tr="Endüstri Ar-Ge kuruluşlarıyla seçilmiş çalışmalar — teklifler değil, teslim edilmiş sonuçlar.">
+      Selected engagements with industry R&amp;D organizations — delivered outcomes, not proposals.
+    </p>
+  </div>
+  <div class="project-cards">
+
+    <!-- TRUSTLIFE -->
+    <div class="project-card reveal">
+      <div class="client-header">
+        <div class="logo-mark logo-trustlife">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="14" width="24" height="4" rx="2" fill="currentColor" opacity=".7"/>
+            <rect x="14" y="4" width="4" height="24" rx="2" fill="currentColor" opacity=".7"/>
+            <circle cx="16" cy="16" r="4" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="client-info">
+          <span class="client-name">Trustlife Ventures</span>
+          <span class="client-url"><a href="https://www.trustlifeventures.com/arge-merkezi" target="_blank" rel="noopener">Ar-Ge Merkezi ↗</a></span>
+        </div>
+      </div>
+      <h3 data-en="Original Drug Design — Computational Support" data-tr="Orijinal İlaç Tasarımı — Hesaplamalı Destek">Original Drug Design — Computational Support</h3>
+      <p data-en="End-to-end in-silico support for an original small-molecule drug discovery project. Delivered molecular modeling, virtual screening, molecular docking campaigns, MD simulations for binding-stability assessment, and custom software/system infrastructure for the R&D pipeline."
+         data-tr="Özgün küçük molekül ilaç keşfi projesine uçtan uca in-silico destek. Ar-Ge boru hattı için moleküler modelleme, sanal tarama, moleküler docking kampanyaları, bağlanma-stabilite değerlendirmesi için MD simülasyonları ve özel yazılım/sistem altyapısı teslim edildi.">
+        End-to-end in-silico support for an original small-molecule drug discovery project. Delivered molecular modeling, virtual screening, molecular docking campaigns, MD simulations for binding-stability assessment, and custom software/system infrastructure for the R&amp;D pipeline.
+      </p>
+      <div class="tags">
+        <span class="tag">Molecular Modeling</span>
+        <span class="tag">Docking</span>
+        <span class="tag">MD Simulations</span>
+        <span class="tag">Systems &amp; Software</span>
+        <span class="tag">CADD</span>
+      </div>
+      <div class="project-meta">
+        <div class="meta-item">
+          <span class="meta-label" data-en="Type" data-tr="Tür">Type</span>
+          <span class="meta-value" data-en="Project-based" data-tr="Proje Bazlı">Project-based</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label" data-en="Period" data-tr="Dönem">Period</span>
+          <span class="meta-value">2024</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label" data-en="Sector" data-tr="Sektör">Sector</span>
+          <span class="meta-value" data-en="Pharma R&D" data-tr="İlaç Ar-Ge">Pharma R&amp;D</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- YERLIKA -->
+    <div class="project-card reveal">
+      <div class="client-header">
+        <div class="logo-mark logo-yerlika">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 6 L16 16 L24 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".8"/>
+            <path d="M16 16 L16 27" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <circle cx="16" cy="16" r="3" fill="currentColor" opacity=".6"/>
+          </svg>
+        </div>
+        <div class="client-info">
+          <span class="client-name">Yerlika Biopharma</span>
+          <span class="client-url"><a href="https://www.yerlika.com" target="_blank" rel="noopener">yerlika.com ↗</a></span>
+        </div>
+      </div>
+      <h3 data-en="Statistics & DoE Training + Workflow Advisory" data-tr="İstatistik ve DoE Eğitimi + İş Akışı Danışmanlığı">Statistics &amp; DoE Training + Workflow Advisory</h3>
+      <p data-en="Designed and delivered an 84-hour applied training program in fundamental statistics and experimental design (DoE) for the biopharma R&D team — covering probability theory, hypothesis testing, ANOVA, regression, and full factorial / RSM-based DoE methodology. In parallel, provided strategic advisory on multiple internal operational workflows."
+         data-tr="Biyofarma Ar-Ge ekibi için olasılık teorisi, hipotez testleri, ANOVA, regresyon ve tam faktöriyel / RSM tabanlı DoE metodolojisini kapsayan 84 saatlik temel istatistik ve deney tasarımı uygulama eğitim programı tasarlandı ve teslim edildi. Paralel olarak birden fazla iç operasyonel iş akışına stratejik danışmanlık sağlandı.">
+        Designed and delivered an 84-hour applied training program in fundamental statistics and experimental design (DoE) for the biopharma R&amp;D team — covering probability theory, hypothesis testing, ANOVA, regression, and full factorial / RSM-based DoE methodology. In parallel, provided strategic advisory on multiple internal operational workflows.
+      </p>
+      <div class="tags">
+        <span class="tag">Applied Statistics</span>
+        <span class="tag">DoE</span>
+        <span class="tag">ANOVA</span>
+        <span class="tag">RSM</span>
+        <span class="tag">Training</span>
+        <span class="tag">Workflow Advisory</span>
+      </div>
+      <div class="project-meta">
+        <div class="meta-item">
+          <span class="meta-label" data-en="Type" data-tr="Tür">Type</span>
+          <span class="meta-value" data-en="Training + Advisory" data-tr="Eğitim + Danışmanlık">Training + Advisory</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label" data-en="Volume" data-tr="Hacim">Volume</span>
+          <span class="meta-value">84 hrs</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label" data-en="Period" data-tr="Dönem">Period</span>
+          <span class="meta-value">11.2025 – 06.2026</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label" data-en="Sector" data-tr="Sektör">Sector</span>
+          <span class="meta-value" data-en="Biopharma" data-tr="Biyofarma">Biopharma</span>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div></section>
 
@@ -320,11 +492,11 @@
   <div class="teaching-grid">
     <div class="course-card reveal">
       <div class="course-code">ECZ224 / ECZ225 — <span data-en="Undergraduate" data-tr="Lisans">Undergraduate</span></div>
-      <h3 data-en="Biochemistry & Lab Applications" data-tr="Biyokimya ve Laboratuvar Uygulamaları">Biochemistry & Lab Applications</h3>
+      <h3 data-en="Biochemistry & Lab Applications" data-tr="Biyokimya ve Laboratuvar Uygulamaları">Biochemistry &amp; Lab Applications</h3>
     </div>
     <div class="course-card reveal">
       <div class="course-code">ECZ113 — <span data-en="Undergraduate" data-tr="Lisans">Undergraduate</span></div>
-      <h3 data-en="Medical Biology & Genetics" data-tr="Tıbbi Biyoloji ve Genetik">Medical Biology & Genetics</h3>
+      <h3 data-en="Medical Biology & Genetics" data-tr="Tıbbi Biyoloji ve Genetik">Medical Biology &amp; Genetics</h3>
     </div>
     <div class="course-card reveal">
       <div class="course-code">ECZ428 — <span data-en="Undergraduate" data-tr="Lisans">Undergraduate</span></div>
@@ -336,19 +508,19 @@
     </div>
     <div class="course-card reveal">
       <div class="course-code">ECZ011 — <span data-en="Undergraduate" data-tr="Lisans">Undergraduate</span></div>
-      <h3 data-en="Intro to Molecular Modeling & CADD" data-tr="Moleküler Modelleme ve CADD'ye Giriş">Intro to Molecular Modeling & CADD</h3>
+      <h3 data-en="Intro to Molecular Modeling & CADD" data-tr="Moleküler Modelleme ve CADD'ye Giriş">Intro to Molecular Modeling &amp; CADD</h3>
     </div>
     <div class="course-card reveal">
       <div class="course-code">ECZ008 — <span data-en="Elective" data-tr="Seçmeli">Elective</span></div>
-      <h3 data-en="Advanced Molecular Modeling & Drug Design" data-tr="İleri Moleküler Modelleme ve İlaç Tasarımı">Advanced Molecular Modeling & Drug Design</h3>
+      <h3 data-en="Advanced Molecular Modeling & Drug Design" data-tr="İleri Moleküler Modelleme ve İlaç Tasarımı">Advanced Molecular Modeling &amp; Drug Design</h3>
     </div>
     <div class="course-card reveal">
       <div class="course-code">UEC251 — <span data-en="Elective" data-tr="Seçmeli">Elective</span></div>
-      <h3 data-en="AI in Healthcare & Philosophy of Technology" data-tr="Sağlıkta Yapay Zekâ ve Teknoloji Felsefesi">AI in Healthcare & Philosophy of Technology</h3>
+      <h3 data-en="AI in Healthcare & Philosophy of Technology" data-tr="Sağlıkta Yapay Zekâ ve Teknoloji Felsefesi">AI in Healthcare &amp; Philosophy of Technology</h3>
     </div>
     <div class="course-card reveal">
       <div class="course-code">MOT501 / MOT502 — <span data-en="Graduate" data-tr="Lisansüstü">Graduate</span></div>
-      <h3 data-en="Advanced Biochemistry I & II" data-tr="İleri Biyokimya I ve II">Advanced Biochemistry I & II</h3>
+      <h3 data-en="Advanced Biochemistry I & II" data-tr="İleri Biyokimya I ve II">Advanced Biochemistry I &amp; II</h3>
     </div>
   </div>
 </div></section>
