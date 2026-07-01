@@ -87,9 +87,16 @@
     .submit-note{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.06em}
 
     /* SUCCESS STATE */
-    .form-success{display:none;text-align:center;padding:3rem;border:1px solid var(--amber-dim);border-radius:4px;background:rgba(201,149,58,.05)}
-    .form-success h3{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--white);margin-bottom:.75rem}
-    .form-success p{color:var(--muted);font-style:italic}
+    .form-success{display:none;padding:2rem;border:1px solid var(--amber-dim);border-radius:4px;background:rgba(201,149,58,.04)}
+    .success-header{margin-bottom:1.5rem}
+    .success-header h3{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:300;color:var(--white);margin-bottom:.5rem}
+    .success-header p{color:var(--muted);font-size:.9rem;font-style:italic;line-height:1.65}
+    .success-header strong{color:var(--amber);font-style:normal}
+    .message-preview{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1.25rem 1.5rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);line-height:1.85;white-space:pre-wrap;margin-bottom:1.5rem;max-height:230px;overflow-y:auto}
+    .success-actions{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+    .btn-copy{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;padding:.85rem 2rem;background:transparent;color:var(--amber);border:1px solid var(--amber-dim);border-radius:2px;cursor:pointer;transition:all .3s}
+    .btn-copy:hover{background:rgba(201,149,58,.1)}
+    .btn-copy.copied{color:#4dd68a;border-color:#4dd68a}
 
     /* FOOTER */
     footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2rem;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--muted);letter-spacing:.1em}
@@ -290,12 +297,23 @@
     </p>
   </div>
 
-  <div id="form-success" class="form-success reveal">
-    <h3 data-en="Inquiry sent." data-tr="Başvuru gönderildi.">Inquiry sent.</h3>
-    <p data-en="Your email client should have opened with your message pre-filled. If not, email me directly at egundeger@gmail.com."
-       data-tr="E-posta istemciniz mesajınız önceden doldurulmuş olarak açılmış olmalı. Açılmadıysa doğrudan egundeger@gmail.com adresine yazın.">
-      Your email client should have opened with your message pre-filled. If not, email me directly at egundeger@gmail.com.
-    </p>
+  <div id="form-success" class="form-success">
+    <div class="success-header">
+      <h3 data-en="Inquiry composed." data-tr="Başvuru hazırlandı.">Inquiry composed.</h3>
+      <p data-en="Your message is ready. Click &lt;strong&gt;Open in Gmail&lt;/strong&gt; to send it directly, or &lt;strong&gt;Copy text&lt;/strong&gt; and paste into any email client — reply-to is set to your address."
+         data-tr="Mesajınız hazır. Doğrudan göndermek için &lt;strong&gt;Gmail'de Aç&lt;/strong&gt;'a tıklayın veya &lt;strong&gt;Metni kopyala&lt;/strong&gt; ile herhangi bir e-posta istemcisine yapıştırın — yanıt adresi sizin adresinize ayarlı.">
+        Your message is ready. Click <strong>Open in Gmail</strong> to send it directly, or <strong>Copy text</strong> and paste into any email client — reply-to is set to your address.
+      </p>
+    </div>
+    <pre class="message-preview" id="message-preview"></pre>
+    <div class="success-actions">
+      <a id="gmail-btn" href="#" target="_blank" rel="noopener" class="btn-submit"
+         data-en="Open in Gmail →" data-tr="Gmail'de Aç →">Open in Gmail →</a>
+      <button id="copy-btn" class="btn-copy"
+              data-en="Copy text" data-tr="Metni kopyala">Copy text</button>
+      <span class="submit-note"
+            data-en="To: egundeger@gmail.com" data-tr="Alıcı: egundeger@gmail.com">To: egundeger@gmail.com</span>
+    </div>
   </div>
 
   <form id="speaking-form" class="form-grid reveal" novalidate>
@@ -358,7 +376,7 @@
                 data-placeholder-tr="Hedef kitle profili, beklenen katılımcı sayısı, özel hedefler veya kısıtlamalar…"
                 placeholder="Audience profile, expected number of attendees, any specific goals or constraints…"></textarea>
     </div>
-    <p class="form-note" data-en="* This form opens your email client with your inquiry pre-filled. Your data stays on your device." data-tr="* Bu form, başvurunuz önceden doldurulmuş olarak e-posta istemcinizi açar. Verileriniz cihazınızda kalır.">* This form opens your email client with your inquiry pre-filled. Your data stays on your device.</p>
+    <p class="form-note" data-en="* Your data never leaves your device. After submitting, you'll get a composed message to send via Gmail or copy." data-tr="* Verileriniz cihazınızı terk etmez. Gönderdikten sonra Gmail üzerinden iletebileceğiniz veya kopyalayabileceğiniz hazır bir mesaj alırsınız.">* Your data never leaves your device. After submitting, you'll get a composed message to send via Gmail or copy.</p>
     <div class="form-submit">
       <button type="submit" class="btn-submit" data-en="Send inquiry →" data-tr="Başvuruyu gönder →">Send inquiry →</button>
       <span class="submit-note" data-en="Or email directly: egundeger@gmail.com" data-tr="Ya da doğrudan yazın: egundeger@gmail.com">Or email directly: <a href="mailto:egundeger@gmail.com" style="color:var(--amber);text-decoration:none">egundeger@gmail.com</a></span>
@@ -422,7 +440,7 @@ const obs=new IntersectionObserver(entries=>{
 },{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
-/* ── FORM SUBMIT → mailto ── */
+/* ── FORM SUBMIT → Gmail compose + clipboard ── */
 document.getElementById('speaking-form').addEventListener('submit',function(e){
   e.preventDefault();
   const name=document.getElementById('f-name').value.trim();
@@ -437,21 +455,49 @@ document.getElementById('speaking-form').addEventListener('submit',function(e){
     alert(lang==='tr'?'Lütfen zorunlu alanları doldurun (Ad, E-posta, Mesaj).':'Please fill in the required fields (Name, Email, Message).');
     return;
   }
-  const subject=encodeURIComponent('Speaking Inquiry: '+(topic||type||'General'));
-  const body=encodeURIComponent(
-    'Name: '+name+'\n'+
-    (org?'Organization / Event: '+org+'\n':'')+
-    'Reply-to: '+email+'\n'+
+  const bodyText=
+    'Ad / Name: '+name+'\n'+
+    (org?'Kuruluş / Organization: '+org+'\n':'')+
+    'Yanıt adresi / Reply-to: '+email+'\n'+
     (type?'Format: '+type+'\n':'')+
-    (topic?'Topic: '+topic+'\n':'')+
-    (date?'Date / Timeframe: '+date+'\n':'')+
-    '\nMessage:\n'+message
-  );
-  window.location.href='mailto:egundeger@gmail.com?subject='+subject+'&body='+body;
+    (topic?'Konu / Topic: '+topic+'\n':'')+
+    (date?'Tarih / Date: '+date+'\n':'')+
+    '\nMesaj / Message:\n'+message;
+  const subjectText='Speaking Inquiry: '+(topic||type||'General');
+  const gmailURL='https://mail.google.com/mail/?view=cm&fs=1&to=egundeger%40gmail.com&su='+encodeURIComponent(subjectText)+'&body='+encodeURIComponent(bodyText);
+  document.getElementById('gmail-btn').href=gmailURL;
+  document.getElementById('message-preview').textContent=bodyText;
   document.getElementById('speaking-form').style.display='none';
   const suc=document.getElementById('form-success');
   suc.style.display='block';
-  setTimeout(()=>suc.classList.add('visible'),50);
+  setTimeout(()=>{
+    suc.classList.add('visible');
+    setLang(document.documentElement.lang||'tr');
+  },50);
+});
+
+document.getElementById('copy-btn').addEventListener('click',function(){
+  const text=document.getElementById('message-preview').textContent;
+  const btn=this;
+  const lang=document.documentElement.lang||'tr';
+  const copiedLabel=lang==='tr'?'Kopyalandı ✓':'Copied ✓';
+  const defaultLabel=lang==='tr'?'Metni kopyala':'Copy text';
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>{
+      btn.classList.add('copied');btn.textContent=copiedLabel;
+      setTimeout(()=>{btn.classList.remove('copied');btn.textContent=defaultLabel},2500);
+    });
+  }else{
+    const ta=document.createElement('textarea');
+    ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    try{
+      document.execCommand('copy');
+      btn.classList.add('copied');btn.textContent=copiedLabel;
+      setTimeout(()=>{btn.classList.remove('copied');btn.textContent=defaultLabel},2500);
+    }catch(_){}
+    document.body.removeChild(ta);
+  }
 });
 </script>
 </body>
