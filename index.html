@@ -7,20 +7,34 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg:#111214;--surface:#1a1c20;--border:#27292f;
-      --amber:#c9953a;--amber-dim:#8a6325;
+    :root,:root[data-theme="light"]{
+      /* LIGHT — warm cream, claude.ai tones */
+      --bg:#f4f2ea;--surface:#fbfaf5;--border:#e4e0d4;
+      --amber:#a6642a;--amber-hover:#8f551f;--amber-dim:#b0763a;
+      --steel:#3d7189;--steel-dim:#aac6d4;
+      --text:#413e38;--muted:#6f6a61;--white:#26231e;
+      --on-accent:#fbfaf5;
+      --amber-rgb:166,100,42;--steel-rgb:61,113,137;
+      --nav-bg:rgba(244,242,234,.85);--canvas-opacity:.35;
+    }
+    :root[data-theme="dark"]{
+      /* DARK — warm charcoal, Claude tones */
+      --bg:#1c1b19;--surface:#242320;--border:#37352f;
+      --amber:#c9953a;--amber-hover:#e0aa4a;--amber-dim:#8a6325;
       --steel:#5b8fa8;--steel-dim:#2e4f62;
-      --text:#d8d4ce;--muted:#6e7480;--white:#f0ece5;
+      --text:#d8d4ce;--muted:#8a867e;--white:#f0ece5;
+      --on-accent:#0a0d12;
+      --amber-rgb:201,149,58;--steel-rgb:91,143,168;
+      --nav-bg:rgba(28,27,25,.85);--canvas-opacity:.16;
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville',Georgia,serif;font-size:16px;line-height:1.7;overflow-x:hidden}
-    #canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.18}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:'Libre Baskerville',Georgia,serif;font-size:1rem;line-height:1.7;overflow-x:hidden;transition:background-color .4s ease,color .4s ease}
+    #canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:var(--canvas-opacity);transition:opacity .4s ease}
     .wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 2rem}
 
     /* NAV */
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,13,18,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;transition:background-color .4s ease,border-color .4s ease}
     .nav-logo{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--amber);letter-spacing:.15em;text-transform:uppercase}
     .nav-right{display:flex;align-items:center;gap:2rem}
     nav ul{list-style:none;display:flex;gap:2rem}
@@ -30,8 +44,15 @@
     /* LANG TOGGLE */
     .lang-toggle{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.15em;display:flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
     .lang-btn{background:none;border:none;cursor:pointer;padding:.35rem .65rem;color:var(--muted);transition:all .25s}
-    .lang-btn.active{background:var(--amber);color:#0a0d12;font-weight:500}
+    .lang-btn.active{background:var(--amber);color:var(--on-accent);font-weight:500}
     .lang-btn:not(.active):hover{color:var(--amber)}
+
+    /* UTILITY CONTROLS (theme + font size) */
+    .util-group{display:flex;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+    .util-btn{background:none;border:none;border-left:1px solid var(--border);cursor:pointer;padding:.35rem .6rem;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:1;transition:all .25s}
+    .util-btn:first-child{border-left:none}
+    .util-btn:hover{color:var(--amber);background:rgba(var(--amber-rgb),.08)}
+    .util-btn.theme-btn{font-size:.85rem}
 
     /* HERO */
     #hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:5rem}
@@ -42,8 +63,8 @@
     .hero-desc{margin-top:2rem;max-width:560px;font-size:1.05rem;color:var(--muted);font-style:italic;opacity:0;animation:fadeUp .9s .8s forwards}
     .hero-cta{margin-top:2.5rem;display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fadeUp .9s 1s forwards}
     .btn{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;padding:.75rem 1.75rem;border-radius:2px;text-decoration:none;transition:all .3s;cursor:pointer;border:none}
-    .btn-primary{background:var(--amber);color:#0a0d12;font-weight:500}
-    .btn-primary:hover{background:#e0aa4a;transform:translateY(-2px)}
+    .btn-primary{background:var(--amber);color:var(--on-accent);font-weight:500}
+    .btn-primary:hover{background:var(--amber-hover);transform:translateY(-2px)}
     .btn-ghost{border:1px solid var(--border);color:var(--muted);background:transparent}
     .btn-ghost:hover{border-color:var(--amber);color:var(--amber);transform:translateY(-2px)}
 
@@ -66,14 +87,14 @@
     .card h3{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400;color:var(--white);margin-bottom:.5rem}
     .card p{font-size:.88rem;color:var(--muted);line-height:1.6}
     .tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
-    .tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.08em;padding:.3rem .7rem;border-radius:2px;background:rgba(91,143,168,.12);border:1px solid var(--steel-dim);color:var(--steel)}
+    .tag{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.08em;padding:.3rem .7rem;border-radius:2px;background:rgba(var(--steel-rgb),.12);border:1px solid var(--steel-dim);color:var(--steel)}
 
     /* CONSULTING */
     .consulting-list{margin-top:3rem;display:flex;flex-direction:column;gap:1px}
     .cons-item{background:var(--surface);border:1px solid var(--border);transition:border-color .3s;cursor:pointer;overflow:hidden;user-select:none}
     .cons-item.open{border-color:var(--amber-dim)}
     .cons-header{display:grid;grid-template-columns:3rem 1fr auto;align-items:center;gap:1.5rem;padding:1.5rem;transition:background .3s}
-    .cons-item:hover .cons-header,.cons-item.open .cons-header{background:rgba(201,149,58,.04)}
+    .cons-item:hover .cons-header,.cons-item.open .cons-header{background:rgba(var(--amber-rgb),.04)}
     .cons-num{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--amber-dim);letter-spacing:.1em}
     .cons-text h3{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400;color:var(--white);margin-bottom:.25rem}
     .cons-text p{font-size:.85rem;color:var(--muted)}
@@ -88,7 +109,7 @@
     .cons-deliverables li{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--steel);letter-spacing:.06em;padding-left:1.3em;position:relative}
     .cons-deliverables li::before{content:'→';position:absolute;left:0;color:var(--amber-dim)}
     .cons-cta-btn{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;padding:.7rem 1.25rem;border:1px solid var(--amber-dim);color:var(--amber);text-decoration:none;border-radius:2px;white-space:nowrap;display:inline-block;transition:all .3s;margin-top:.25rem}
-    .cons-cta-btn:hover{background:var(--amber);color:#0a0d12;transform:translateY(-2px)}
+    .cons-cta-btn:hover{background:var(--amber);color:var(--on-accent);transform:translateY(-2px)}
 
     /* PROJECT CARDS */
     .project-cards{margin-top:3rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:1.5rem}
@@ -174,6 +195,15 @@
       .cons-detail-inner{grid-template-columns:1fr}
     }
   </style>
+  <script>
+    /* set theme + font size before paint to avoid flash */
+    (function(){try{
+      var t=localStorage.getItem('theme')||'light';
+      document.documentElement.setAttribute('data-theme',t);
+      var f=parseFloat(localStorage.getItem('fontScale'))||1;
+      document.documentElement.style.fontSize=(16*f)+'px';
+    }catch(e){document.documentElement.setAttribute('data-theme','light');}})();
+  </script>
 </head>
 <body>
 <canvas id="canvas"></canvas>
@@ -194,6 +224,11 @@
     <div class="lang-toggle">
       <button class="lang-btn"        id="btn-en" onclick="setLang('en')">EN</button>
       <button class="lang-btn active" id="btn-tr" onclick="setLang('tr')">TR</button>
+    </div>
+    <div class="util-group">
+      <button class="util-btn" id="font-dec" title="Smaller text" aria-label="Decrease text size">A−</button>
+      <button class="util-btn" id="font-inc" title="Larger text" aria-label="Increase text size">A+</button>
+      <button class="util-btn theme-btn" id="theme-toggle" title="Light / dark" aria-label="Toggle light or dark theme">☾</button>
     </div>
   </div>
 </nav>
@@ -817,6 +852,7 @@ function setLang(lang) {
   document.getElementById('btn-en').classList.toggle('active', lang==='en');
   document.getElementById('btn-tr').classList.toggle('active', lang==='tr');
   document.documentElement.lang = lang;
+  try{localStorage.setItem('lang',lang);}catch(e){}
   document.querySelectorAll('[data-en][data-tr]').forEach(el => {
     const val = el.getAttribute('data-'+lang);
     if (!val) return;
@@ -832,6 +868,12 @@ function setLang(lang) {
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 let W, H, nodes;
+let LINE='201,149,58', DOT='91,143,168';
+function applyCanvasColors(){
+  const cs=getComputedStyle(document.documentElement);
+  LINE=(cs.getPropertyValue('--amber-rgb')||LINE).trim();
+  DOT=(cs.getPropertyValue('--steel-rgb')||DOT).trim();
+}
 function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight}
 function init(n){nodes=[];for(let i=0;i<n;i++)nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*2+1})}
 function draw(){
@@ -841,14 +883,35 @@ function draw(){
     if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;
     for(let j=i+1;j<nodes.length;j++){
       const m=nodes[j],dx=n.x-m.x,dy=n.y-m.y,d=Math.hypot(dx,dy);
-      if(d<140){ctx.beginPath();ctx.strokeStyle=`rgba(201,149,58,${(1-d/140)*.6})`;ctx.lineWidth=.5;ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);ctx.stroke()}
+      if(d<140){ctx.beginPath();ctx.strokeStyle=`rgba(${LINE},${(1-d/140)*.6})`;ctx.lineWidth=.5;ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);ctx.stroke()}
     }
-    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle='rgba(91,143,168,.7)';ctx.fill();
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle=`rgba(${DOT},.7)`;ctx.fill();
   });
   requestAnimationFrame(draw);
 }
-resize();init(55);draw();
+applyCanvasColors();resize();init(55);draw();
 window.addEventListener('resize',()=>{resize();init(55)});
+
+/* ── THEME ── */
+function setTheme(theme){
+  document.documentElement.setAttribute('data-theme',theme);
+  try{localStorage.setItem('theme',theme);}catch(e){}
+  const btn=document.getElementById('theme-toggle');
+  if(btn)btn.textContent = theme==='dark' ? '☀' : '☾';
+  applyCanvasColors();
+}
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme')||'light';
+  setTheme(cur==='dark'?'light':'dark');
+}
+
+/* ── FONT SIZE ── */
+let fontScale=parseFloat(localStorage.getItem('fontScale'))||1;
+function applyFontScale(){
+  fontScale=Math.min(1.3,Math.max(0.85,Math.round(fontScale*100)/100));
+  document.documentElement.style.fontSize=(16*fontScale)+'px';
+  try{localStorage.setItem('fontScale',fontScale);}catch(e){}
+}
 
 /* ── REVEAL ── */
 const obs=new IntersectionObserver((entries)=>{
@@ -856,8 +919,13 @@ const obs=new IntersectionObserver((entries)=>{
 },{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
-/* ── DEFAULT LANG ── */
-setLang('tr');
+/* ── INIT CONTROLS ── */
+setTheme(localStorage.getItem('theme')||'light');
+applyFontScale();
+setLang(localStorage.getItem('lang')||'tr');
+document.getElementById('theme-toggle').addEventListener('click',toggleTheme);
+document.getElementById('font-inc').addEventListener('click',()=>{fontScale+=0.1;applyFontScale();});
+document.getElementById('font-dec').addEventListener('click',()=>{fontScale-=0.1;applyFontScale();});
 
 /* ── CONSULTING ACCORDION ── */
 document.querySelectorAll('.cons-item').forEach(item=>{
