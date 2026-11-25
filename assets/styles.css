@@ -1369,6 +1369,24 @@ section {
   animation: labPulse 2.2s ease-in-out infinite;
 }
 
+.art-screening {
+  background: radial-gradient(circle at 50% 50%, #102e3c, #091120 74%);
+}
+.art-screening span:nth-child(1) {
+  left: 22%; top: 50%; width: 28px; height: 28px; margin-top: -14px;
+  border-radius: 7px; border: 1.5px solid #38bdf8; transform: rotate(45deg);
+}
+.art-screening span:nth-child(2) {
+  left: 50%; top: 50%; width: 32px; height: 32px; margin: -16px 0 0 -16px;
+  border-radius: 8px; background: linear-gradient(135deg, #34d399, #f59e42);
+  box-shadow: 0 0 16px rgba(52, 211, 153, 0.38);
+  animation: labPulse 2.4s ease-in-out infinite;
+}
+.art-screening span:nth-child(3) {
+  right: 22%; top: 50%; width: 28px; height: 28px; margin-top: -14px;
+  border-radius: 7px; border: 1.5px solid #34d399; transform: rotate(45deg);
+}
+
 .art-philosophy {
   background: radial-gradient(circle at 50% 50%, #2b2338, #091120 74%);
 }
